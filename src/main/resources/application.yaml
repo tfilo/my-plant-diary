@@ -1,0 +1,47 @@
+
+server:
+  port: ${PD_SERVER_PORT:8080}
+spring:
+  ## PostgreSQL
+  datasource:
+    hikari:
+      connectionTimeout: ${PD_DATASOURCE_CONNECTION_TIMEOUT:20000}
+      maximumPoolSize: ${PD_DATASOURCE_MAXIMUM_POOL_SIZE:5}
+    url: ${PD_DATASOURCE:jdbc:postgresql://localhost:5432/plantdiary}
+    username: ${PD_DATASOURCE_USER:user}
+    password: ${PD_DATASOURCE_PASS:User123}
+  #jpa
+  #drop n create table again, good for testing, comment this in production
+  jpa:
+    show-sql: ${PD_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: ${PD_JPA_FORMAT_SQL:true}
+        enable_lazy_load_no_trans: ${PD_JPA_ENABLE_LAZY_LOAD_NO_TRANS:true}
+        event:
+          merge:
+            entity_copy_observer: ${PD_JPA_ENTITY_COPY_OBSERVER:allow}
+        jdbc:
+          lob:
+            non_contextual_creation: ${PD_JPA_NON_CONTEXTUAL_CREATION:true}
+    hibernate:
+     ddl-auto: validate # ddl-auto: create
+  #flyway
+  flyway:
+    check-location: true
+    locations: ${PD_FLYWAY_CHECK_LOCATIONS:classpath:/db/migration}
+
+  #log
+  logging:
+    level:
+      sk:
+        filo:
+          plantdiary: ${PD_LOG_SK_FILO_PLANTDIARY:debug}
+      org:
+        springframework:
+          security: ${PD_LOG_ORG_SPRINGFRAMEWORK_SECURITY:info}
+
+plantdiary:
+  jwtExpirationTime: ${PD_AUTH_EXPIRATION_TIME:2592000}
+  jwtPrivateKey: ${PD_AUTH_PRIVATE_KEY:MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAJi6+bVIlSOxldDHf0sExksJcMXmbquMqo9U5GjsXUYL42UVdWYdUtWCBn6q965Ls19lYtY6BAkMT3btPIL/j1GYfqq0bOFVBp8C9Bry1B4NQVV8ySOKLtyos3g9SjfoI0sgr4IZJQy/efeCZ+10/f2JMCjhMk/19TNTMiFdcnd7AgMBAAECgYAILqQoER5kTiQ/jiCErVnONVBEWeb968hLa3ndISSSFxr0lGS4tsN0SsX8TT59qPKQHsdfwLXsoiszrNv8DKLp36mKlW5VTWk3iMqsu2J4iVEA43bWQVp/hWj5dSoIe5ayalVOUzBXNihjqKe+I3MkhQigvGeoXSMBcWu/gXdRUQJBAOqLP8rD8/rD/60ZtgZ0XTkK//Nk6OnniD57YyqxCusuQ1jVV5nlQDa080uAiKfKeC5oQ0pbhRwLRDTbTVef01kCQQCms777957X2klxQN9p/VNT/Zeio8Hd+0o2tLOTsVX+QamS7+tRVoTS4QdYtOEtpUS9fsf73mRsJtj+m5dXymrzAkEA3uxvO3e343Z7ArnXSpc7K8aKs3oL7pXD5y87eA5CBHo6RKqx0nIU8GpYfEC0olZMmD89BeWqxJbowxxVjJ06MQJATeLVbKw5DujyP3Pr7n1pnWhynI6eWbS66+xpqqvEXdMYA4sNCye9TznMUOnR+52oDFFb5pX1nYJZCDxx7ZapeQJBAJ3QkX5Rs5ZO4bXfbM33g9NrJmYtdfqKEiQ91vabhUeQb+U0enb94ZV/iVcFCaO+P/42ImTCfwwXwX2Zb75oPnY=}
+  jwtPublicKey: ${PD_AUTH_PUBLIC_KEY:MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCYuvm1SJUjsZXQx39LBMZLCXDF5m6rjKqPVORo7F1GC+NlFXVmHVLVggZ+qveuS7NfZWLWOgQJDE927TyC/49RmH6qtGzhVQafAvQa8tQeDUFVfMkjii7cqLN4PUo36CNLIK+CGSUMv3n3gmftdP39iTAo4TJP9fUzUzIhXXJ3ewIDAQAB}
