@@ -14,9 +14,10 @@ public class PhotoSO {
 
     public PhotoSO() {}
 
-    public PhotoSO(@Size(max = 200) String description, byte[] data) {
-        this.description = description;
+    public PhotoSO(CreatePhotoSO photo, byte[] data) {
+        this.description = photo.getDescription();
         this.data = data;
+        this.plant = photo.getPlant();
     }
 
     @NotNull
@@ -26,4 +27,6 @@ public class PhotoSO {
     private String description;
 
     private byte[] data;
+
+    private PlantBasicSO plant;
 }

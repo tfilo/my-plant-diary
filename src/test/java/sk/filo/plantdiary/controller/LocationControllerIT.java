@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LocationControllerIT extends BaseIntegrationTest {
 
     @Test
-    public void locationBasicTest() throws Exception {
+    public void locationTest() throws Exception {
         super.setAuthentication("user");
 
         // test create location

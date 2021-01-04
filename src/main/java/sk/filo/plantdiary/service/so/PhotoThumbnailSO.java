@@ -19,4 +19,6 @@ public class PhotoThumbnailSO {
     private String description;
 
     private byte[] thumbnail;
+
+    private PlantBasicSO plant;
 }

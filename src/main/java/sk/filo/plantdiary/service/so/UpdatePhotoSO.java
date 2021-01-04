@@ -4,20 +4,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @ToString
-public class CreatePhotoSO {
+public class UpdatePhotoSO {
+
+    @NotNull
+    private Long id;
 
     @Size(max=200)
     private String description;
 
-    @Valid
-    @NotNull
     private PlantBasicSO plant;
-
 }

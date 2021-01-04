@@ -3,6 +3,7 @@ package sk.filo.plantdiary.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -12,8 +13,11 @@ import sk.filo.plantdiary.service.PhotoService;
 import sk.filo.plantdiary.service.so.CreatePhotoSO;
 import sk.filo.plantdiary.service.so.PhotoSO;
 import sk.filo.plantdiary.service.so.PhotoThumbnailSO;
+import sk.filo.plantdiary.service.so.UpdatePhotoSO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
@@ -32,9 +36,12 @@ public class PhotoController {
     }
 
     @PostMapping("/photo")
-    public ResponseEntity<PhotoThumbnailSO> create(@NotNull @RequestParam("photo") MultipartFile photo, @Valid @NotNull @RequestBody CreatePhotoSO createPhotoSO) throws IOException {
+    public ResponseEntity<PhotoThumbnailSO> create(
+            @RequestParam("photo") @NotNull MultipartFile photo,
+            @RequestPart("createPhotoSO") @Valid @NotNull CreatePhotoSO createPhotoSO
+    ) throws IOException {
         LOGGER.debug("create({}, {})", photo.getName(), createPhotoSO);
-        PhotoSO photoSO = new PhotoSO(createPhotoSO.getDescription(), photo.getBytes());
+        PhotoSO photoSO = new PhotoSO(createPhotoSO, photo.getBytes());
 
         if (!StringUtils.hasText(createPhotoSO.getDescription())) {
             photoSO.setDescription(photo.getOriginalFilename());
@@ -46,9 +53,9 @@ public class PhotoController {
     }
 
     @PutMapping("/photo")
-    public ResponseEntity<PhotoThumbnailSO> update(@Valid @NotNull @RequestBody PhotoSO photoSO) {
-        LOGGER.debug("update({})", photoSO);
-        return new ResponseEntity<>(photoService.update(photoSO), HttpStatus.OK);
+    public ResponseEntity<PhotoThumbnailSO> update(@Valid @NotNull @RequestBody UpdatePhotoSO updatePhotoSO) {
+        LOGGER.debug("update({})", updatePhotoSO);
+        return new ResponseEntity<>(photoService.update(updatePhotoSO), HttpStatus.OK);
     }
 
     @GetMapping("/photo/{id}")
@@ -58,9 +65,12 @@ public class PhotoController {
     }
 
     @GetMapping("/photo/all/{plantId}")
-    public ResponseEntity<List<PhotoThumbnailSO>> getAllByPlantId(@NotNull @PathVariable Long plantId) {
-        LOGGER.debug("getAll()");
-        return new ResponseEntity<>(photoService.getAll(), HttpStatus.OK);
+    public ResponseEntity<Page<PhotoThumbnailSO>> getAllByPlantId(
+            @NotNull @PathVariable Long plantId,
+            @NotNull @Min(0) @RequestParam Integer page,
+            @NotNull @Min(5) @Max(100) @RequestParam Integer pageSize) {
+        LOGGER.debug("getAllByPlantId({},{},{})", plantId, page, pageSize);
+        return new ResponseEntity<>(photoService.getAllByPlantIdPaginated(plantId, page, pageSize), HttpStatus.OK);
     }
 
     @DeleteMapping("/photo/{id}")

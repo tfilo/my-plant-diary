@@ -22,6 +22,8 @@ public class AuthControllerIT extends BaseIntegrationTest {
     @Test
     public void authenticateUserTest() throws Exception {
 
+        // TODO fix token https://jwt.io/#debugger-io
+
         // TEST correct user, correct password
         AuthSO so = new AuthSO();
         so.setUsername("user");

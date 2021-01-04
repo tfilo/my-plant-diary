@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EventControllerIT extends BaseIntegrationTest {
 
     @Test
-    public void eventBasicTest() throws Exception {
+    public void eventTest() throws Exception {
         super.setAuthentication("user");
 
         // test create event on non existing plant and non existing event type
