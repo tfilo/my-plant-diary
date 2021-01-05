@@ -4,10 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import sk.filo.plantdiary.dao.domain.Event;
 import sk.filo.plantdiary.dao.domain.Photo;
@@ -90,6 +92,10 @@ public class PhotoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.PHOTO_NOT_FOUND.name()));
 
         String username = AuthHelper.getUsername();
+
+        LOGGER.debug(username);
+        LOGGER.debug(photo.toString());
+
         if (photo.getPlant().getOwner().getUsername().equals(username)) {
             photoMapper.toBO(updatePhotoSO, photo);
 
@@ -122,6 +128,7 @@ public class PhotoService {
         }
     }
 
+    @Transactional
     public Page<PhotoThumbnailSO> getAllByPlantIdPaginated(Long plantId, Integer page, Integer pageSize) {
         LOGGER.debug("getAllByPlantIdPaginated {} {} {}", plantId, page, pageSize);
 
@@ -135,7 +142,11 @@ public class PhotoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.PLANT_NOT_FOUND.name());
         }
 
-        return photoRepository.findByPlantId(plantId, pr).map(photoMapper::toThumbnailSO);
+        Page<Photo> photos = photoRepository.findByPlantId(plantId, pr);
+        List<PhotoThumbnailSO> soList = photoMapper.toThumbnailSOList(photos.getContent());
+        Page<PhotoThumbnailSO> results = new PageImpl<>(soList, photos.getPageable(), photos.getTotalElements());
+
+        return results;
     }
 
     public void delete(Long id) {

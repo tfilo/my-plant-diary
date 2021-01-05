@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString(exclude = { "data", "thumbnail","plant" })
+@ToString(exclude = { "data", "thumbnail" })
 @Entity
 @Table(name = "pd_photo")
 @SequenceGenerator(name = "photo_generator", allocationSize = 1, sequenceName = "pd_photo_seq")
@@ -36,7 +36,7 @@ public class Photo implements Serializable {
     private byte[] thumbnail;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "plant_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant;
 
 }

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class EventControllerIT extends BaseIntegrationTest {
 
@@ -28,31 +29,29 @@ public class EventControllerIT extends BaseIntegrationTest {
         createEventSO.getPlant().setId(100000L);
         createEventSO.getType().setId(100000L);
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/event")
+        mvc.perform(MockMvcRequestBuilders.post("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(createEventSO))).andReturn();
-
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.EVENT_TYPE_NOT_FOUND.name());
+                .content(mapToJson(createEventSO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.EVENT_TYPE_NOT_FOUND.name()));
 
         // test create event on non existing plant but existing event type, minimal data
         createEventSO.getType().setId(1L);
-        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/event")
+        mvc.perform(MockMvcRequestBuilders.post("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(createEventSO))).andReturn();
-
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.PLANT_NOT_FOUND.name());
+                .content(mapToJson(createEventSO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.PLANT_NOT_FOUND.name()));
 
         // test create event on existing plant and existing event, minimal data
         createEventSO.getPlant().setId(1L);
-        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/event")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(createEventSO))).andReturn();
+                .content(mapToJson(createEventSO)))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
         EventSO eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
-
         assertThat(eventSO).usingRecursiveComparison().ignoringFields("id", "type.code", "type.schedulable", "plant.name").isEqualTo(createEventSO);
         assertThat(eventSO.getId()).isNotNull();
 
@@ -67,35 +66,38 @@ public class EventControllerIT extends BaseIntegrationTest {
 
         mvcResult = mvc.perform(MockMvcRequestBuilders.put("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(eventSO))).andReturn();
+                .content(mapToJson(eventSO)))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         EventSO updatedEventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
-
         // check if correctly plant name and type name and schedulable wasn't modified
         assertThat(eventSO).usingRecursiveComparison().isNotEqualTo(updatedEventSO);
         // check if other fields was modified correctly
         assertThat(eventSO).usingRecursiveComparison().ignoringFields("type.code", "type.schedulable", "plant.name").isEqualTo(updatedEventSO);
 
         // test get of non existing record
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/100000")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.EVENT_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.get("/api/event/100000"))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.EVENT_NOT_FOUND.name()));
 
         // test get of existing record
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/" + updatedEventSO.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-        eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/" + updatedEventSO.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
 
+        eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
         assertThat(updatedEventSO).usingRecursiveComparison().isEqualTo(eventSO);
 
         // get All tests
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/100000?page=0&pageSize=10")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.PLANT_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.get("/api/event/all/100000?page=0&pageSize=10"))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.PLANT_NOT_FOUND.name()));
 
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=0&pageSize=10")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=0&pageSize=10"))
+                .andExpect(status().isOk())
+                .andReturn();
+
         Page<EventSO> events = mapPagedResponse(mvcResult.getResponse().getContentAsString(), EventSO.class);
         assertThat(events.getTotalElements()).isEqualTo(1);
 
@@ -109,14 +111,15 @@ public class EventControllerIT extends BaseIntegrationTest {
             createEventSO.setDateTime(now.plusDays(range.get(i)));
             mvc.perform(MockMvcRequestBuilders.post("/api/event")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapToJson(createEventSO))).andReturn();
+                    .content(mapToJson(createEventSO))).andExpect(status().isCreated());
         }
 
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=0&pageSize=10")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=0&pageSize=10"))
+                .andExpect(status().isOk())
+                .andReturn();
+
         events = mapPagedResponse(mvcResult.getResponse().getContentAsString(), EventSO.class);
         assertThat(events.getTotalElements()).isEqualTo(25);
-
 
         // check order of all events by date
         Iterator<EventSO> iterator = events.iterator();
@@ -127,8 +130,10 @@ public class EventControllerIT extends BaseIntegrationTest {
             last = actual;
         }
 
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=1&pageSize=10")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=1&pageSize=10"))
+                .andExpect(status().isOk())
+                .andReturn();
+
         events = mapPagedResponse(mvcResult.getResponse().getContentAsString(), EventSO.class);
 
         while (iterator.hasNext()) { // check if ordered by date
@@ -137,8 +142,9 @@ public class EventControllerIT extends BaseIntegrationTest {
             last = actual;
         }
 
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=2&pageSize=10")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=2&pageSize=10"))
+                .andExpect(status().isOk())
+                .andReturn();
         events = mapPagedResponse(mvcResult.getResponse().getContentAsString(), EventSO.class);
 
         while (iterator.hasNext()) { // check if ordered by date
@@ -148,17 +154,18 @@ public class EventControllerIT extends BaseIntegrationTest {
         }
 
         // check delete
-        mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/api/event/" + last.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/event/" + last.getId()))
+                .andExpect(status().isOk());
 
         // check if deleted
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/" + last.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.EVENT_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.get("/api/event/" + last.getId()))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.EVENT_NOT_FOUND.name()));
 
         // get all eventTypes
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/type")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/type"))
+                .andExpect(status().isOk())
+                .andReturn();
         List<EventTypeSO> eventTypes = mapListFromJson(mvcResult.getResponse().getContentAsString(), EventTypeSO.class);
         assertThat(eventTypes.size()).isEqualTo(11);
 
@@ -171,7 +178,6 @@ public class EventControllerIT extends BaseIntegrationTest {
         assertThat(eventTypes.get(3).getSchedulable()).isFalse();
         assertThat(eventTypes.get(7).getSchedulable()).isFalse();
 
-
         // create new event for next test with different user
         createEventSO = easyRandom.nextObject(CreateEventSO.class);
         createEventSO.getPlant().setId(1L);
@@ -179,33 +185,34 @@ public class EventControllerIT extends BaseIntegrationTest {
 
         mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(createEventSO))).andReturn();
+                .content(mapToJson(createEventSO)))
+                .andExpect(status().isCreated())
+                .andReturn();
 
         EventSO createdEventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
 
         super.setAuthentication("user3");
 
         // try to update event of different user
-        mvcResult = mvc.perform(MockMvcRequestBuilders.put("/api/event")
+        mvc.perform(MockMvcRequestBuilders.put("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(createdEventSO))).andReturn();
-
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.EVENT_NOT_FOUND.name());
+                .content(mapToJson(createdEventSO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.EVENT_NOT_FOUND.name()));
 
         // try get all events of plant of different user
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=0&pageSize=10")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.PLANT_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.get("/api/event/all/1?page=0&pageSize=10"))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.PLANT_NOT_FOUND.name()));
 
         // try get single event of different user
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/event/" + createdEventSO.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.EVENT_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.get("/api/event/" + createdEventSO.getId()))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.EVENT_NOT_FOUND.name()));
 
         // try delete event of different user
-        mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/api/event/" + createdEventSO.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.EVENT_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/event/" + createdEventSO.getId()))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.EVENT_NOT_FOUND.name()));
     }
 }

@@ -2,7 +2,6 @@ package sk.filo.plantdiary.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -13,6 +12,7 @@ import sk.filo.plantdiary.service.so.AuthSO;
 import sk.filo.plantdiary.service.so.TokenSO;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthControllerIT extends BaseIntegrationTest {
 
@@ -23,7 +23,6 @@ public class AuthControllerIT extends BaseIntegrationTest {
     public void authenticateUserTest() throws Exception {
 
         // TODO fix token https://jwt.io/#debugger-io
-
         // TEST correct user, correct password
         AuthSO so = new AuthSO();
         so.setUsername("user");
@@ -31,13 +30,15 @@ public class AuthControllerIT extends BaseIntegrationTest {
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(so))).andReturn();
+                .content(mapToJson(so)))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         TokenSO tokenSO = mapFromJson(mvcResult.getResponse().getContentAsString(), TokenSO.class);
 
-        assertThat(tokenSO.getType()).isEqualTo("Bearer");
+        System.out.println(tokenSO.toString());
 
+        assertThat(tokenSO.getType()).isEqualTo("Bearer");
         JwtToken.JwtUser tokenUser = jwtToken.parseToken(tokenSO.getToken());
         assertThat(tokenUser.getUsername()).isEqualTo("user");
         assertThat(tokenUser.getEnabled()).isTrue();
@@ -45,37 +46,37 @@ public class AuthControllerIT extends BaseIntegrationTest {
         // TEST correct user, incorrect password
         so.setUsername("user");
         so.setPassword("user123");
-        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(so))).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.INVALID_CREDENTIALS.name());
+                .content(mapToJson(so)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.INVALID_CREDENTIALS.name()));
 
         // TEST incorrect user, correct password
         so.setUsername("user1");
         so.setPassword("User123");
-        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(so))).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.INVALID_CREDENTIALS.name());
+                .content(mapToJson(so)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.INVALID_CREDENTIALS.name()));
 
         // TEST incorrect user, incorrect password
         so.setUsername("user1");
         so.setPassword("User223");
-        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(so))).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.INVALID_CREDENTIALS.name());
+                .content(mapToJson(so)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.INVALID_CREDENTIALS.name()));
 
         // TEST disabled user
         so.setUsername("user2");
         so.setPassword("User123");
-        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(so))).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.FORBIDDEN.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.DISABLED_USER.name());
+                .content(mapToJson(so)))
+                .andExpect(status().isForbidden())
+                .andExpect(status().reason(ExceptionCode.DISABLED_USER.name()));
     }
 }

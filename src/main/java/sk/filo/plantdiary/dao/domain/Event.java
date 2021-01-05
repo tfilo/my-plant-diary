@@ -40,7 +40,7 @@ public class Event implements Serializable {
     @Column(name = "description", nullable = true, length = 1000)
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant;
 }

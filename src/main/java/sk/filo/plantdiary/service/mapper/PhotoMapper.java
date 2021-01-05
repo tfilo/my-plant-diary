@@ -1,10 +1,10 @@
 package sk.filo.plantdiary.service.mapper;
 
 import org.mapstruct.*;
-import sk.filo.plantdiary.dao.domain.Event;
 import sk.filo.plantdiary.dao.domain.Photo;
-import sk.filo.plantdiary.dao.domain.Plant;
 import sk.filo.plantdiary.service.so.*;
+
+import java.util.List;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = { PlantMapper.class })
 public interface PhotoMapper {
@@ -23,4 +23,5 @@ public interface PhotoMapper {
 
     PhotoThumbnailSO toThumbnailSO(Photo photo);
 
+    List<PhotoThumbnailSO> toThumbnailSOList(List<Photo> photo);
 }
