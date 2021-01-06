@@ -31,8 +31,6 @@ example if you had tomatoes last season, you can find it in history and create n
 
 - `./run-postgre-server.sh`
 - `./run-plant-diary.sh`
-- login: user
-- password: user
 
 ## Endpoins
 
