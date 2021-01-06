@@ -50,7 +50,7 @@ public class PlantController {
         return new ResponseEntity<>(plantService.getOne(id), HttpStatus.OK);
     }
 
-    @GetMapping("/plant/all")
+    @GetMapping("/plant")
     public ResponseEntity<Page<PlantSO>> getAll(
             @RequestParam Optional<Boolean> deleted,
             @NotNull @Min(0) @RequestParam Integer page,
@@ -59,7 +59,7 @@ public class PlantController {
         return new ResponseEntity<>(plantService.getAllPaginated(deleted, page, pageSize), HttpStatus.OK);
     }
 
-    @GetMapping("/plant/byLocation/all")
+    @GetMapping("/plant/byLocation")
     public ResponseEntity<Page<PlantSO>> getAllByLocation(
             @RequestParam Optional<Long> locationId,
             @RequestParam Optional<Boolean> deleted,

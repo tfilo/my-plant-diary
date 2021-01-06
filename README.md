@@ -55,6 +55,7 @@ example if you had tomatoes last season, you can find it in history and create n
 - `PUT: /api/plant` - update Plant
 - `GET: /api/plant/{id}` - get Plant by id
 - `GET: /api/plant` - get all Plants
+- `GET: /api/plant/byLocation` - get all Plants by location, if locationId param not specified than will return plants without specified location
 - `DELETE: /api/plant/{id}` - delete Plant by id
 - `GET: /api/plant/type` - get all PlantTypes
 
