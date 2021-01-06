@@ -1,22 +1,36 @@
 package sk.filo.plantdiary.service.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.NullValueCheckStrategy;
-import sk.filo.plantdiary.dao.domain.Event;
+import org.mapstruct.*;
 import sk.filo.plantdiary.dao.domain.Plant;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.dao.domain.PlantType;
+import sk.filo.plantdiary.service.so.CreatePlantSO;
+import sk.filo.plantdiary.service.so.PlantBasicSO;
+import sk.filo.plantdiary.service.so.PlantSO;
+import sk.filo.plantdiary.service.so.PlantTypeSO;
+
+import java.util.List;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface PlantMapper {
 
-    PlantSO plantToPlantSO(Plant plant);
+    PlantSO toSO(Plant plant);
 
-    Plant plantSOToPlant(PlantSO plant);
+    @Mappings({
+            @Mapping(target = "type", ignore = true)
+    })
+    void toBO(PlantSO plantSO, @MappingTarget Plant plant);
 
-    Plant createPlantSOToPlant(CreatePlantSO plant);
+    @Mappings({
+            @Mapping(target = "type", ignore = true)
+    })
+    Plant toBO(CreatePlantSO plant);
 
-    PlantBasicSO plantToPlantBasicSO(Plant plant);
+    PlantBasicSO toBasicSO(Plant plant);
+
+    List<PlantTypeSO> toPlantTypeSOList(List<PlantType> plantTypes);
+
+    PlantTypeSO toSO(PlantType plantType);
+
+    PlantType toBO(PlantTypeSO plantTypeSO);
 
 }

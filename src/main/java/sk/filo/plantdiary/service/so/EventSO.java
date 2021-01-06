@@ -24,7 +24,7 @@ public class EventSO {
     @NotNull
     private LocalDateTime dateTime;
 
-    @Size(max=1000)
+    @Size(max = 1000)
     private String description;
 
     @NotNull

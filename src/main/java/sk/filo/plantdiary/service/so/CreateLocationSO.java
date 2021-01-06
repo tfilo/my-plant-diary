@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 public class CreateLocationSO {
 
     @NotNull
-    @Size(max=80)
+    @Size(max = 80)
     private String name;
 
 }

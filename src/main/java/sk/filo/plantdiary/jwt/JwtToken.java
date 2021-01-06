@@ -27,49 +27,8 @@ import java.util.Date;
 @Component
 public class JwtToken {
 
-    @Getter
-    @Setter
-    @ToString
-    public static class JwtUser implements UserDetails {
-
-        private String username;
-
-        private Boolean enabled;
-
-        @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public String getPassword() {
-            return null;
-        }
-
-        @Override
-        public boolean isAccountNonExpired() {
-            return true;
-        }
-
-        @Override
-        public boolean isAccountNonLocked() {
-            return true;
-        }
-
-        @Override
-        public boolean isCredentialsNonExpired() {
-            return true;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return enabled;
-        }
-    }
-
     private final Algorithm algorithm;
     private final Integer expiration;
-
     public JwtToken(ConfigProperties configProperties) {
         this.algorithm = Algorithm.RSA256(
                 getPublicKey(configProperties.getJwtPublicKey()), getPrivateKey(configProperties.getJwtPrivateKey())
@@ -128,5 +87,45 @@ public class JwtToken {
         user.setEnabled(jwt.getClaims().get("enabled").asBoolean());
 
         return user;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class JwtUser implements UserDetails {
+
+        private String username;
+
+        private Boolean enabled;
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public String getPassword() {
+            return null;
+        }
+
+        @Override
+        public boolean isAccountNonExpired() {
+            return true;
+        }
+
+        @Override
+        public boolean isAccountNonLocked() {
+            return true;
+        }
+
+        @Override
+        public boolean isCredentialsNonExpired() {
+            return true;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
     }
 }

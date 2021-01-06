@@ -14,12 +14,12 @@ import javax.validation.constraints.Size;
 public class CreateUserSO {
 
     @NotBlank
-    @Size(min=5, max = 25)
+    @Size(min = 5, max = 25)
     private String username;
 
     @NotBlank
     @Email
-    @Size(min=5, max = 255)
+    @Size(min = 5, max = 255)
     private String email;
 
     @Size(max = 50)

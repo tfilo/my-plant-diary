@@ -12,6 +12,7 @@ import sk.filo.plantdiary.service.so.LocationSO;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class LocationControllerIT extends BaseIntegrationTest {
 
@@ -24,9 +25,10 @@ public class LocationControllerIT extends BaseIntegrationTest {
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/location")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(locationSO))).andReturn();
+                .content(mapToJson(locationSO)))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
         LocationSO createdLocationSO = mapFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
 
         assertThat(createdLocationSO).usingRecursiveComparison().ignoringFields("id").isEqualTo(locationSO);
@@ -36,68 +38,75 @@ public class LocationControllerIT extends BaseIntegrationTest {
         createdLocationSO.setName("Updated location name");
         mvcResult = mvc.perform(MockMvcRequestBuilders.put("/api/location")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(createdLocationSO))).andReturn();
+                .content(mapToJson(createdLocationSO)))
+                .andExpect(status().isOk())
+                .andReturn();
 
         LocationSO updatedLocationSO = mapFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
         assertThat(updatedLocationSO).usingRecursiveComparison().isEqualTo(createdLocationSO);
 
         // get existing location
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location/" + updatedLocationSO.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location/" + updatedLocationSO.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
         locationSO = mapFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
         assertThat(locationSO).usingRecursiveComparison().isEqualTo(updatedLocationSO);
 
         // get non existing location
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location/100000")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.LOCATION_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.get("/api/location/100000"))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.LOCATION_NOT_FOUND.name()));
 
         // add 10 new locations
         for (int i = 0; i < 10; i++) {
             locationSO.setName("Location " + (i + 2));
             mvc.perform(MockMvcRequestBuilders.post("/api/location")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapToJson(locationSO))).andReturn();
+                    .content(mapToJson(locationSO)))
+                    .andExpect(status().isCreated());
         }
 
         // get all locations
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location"))
+                .andExpect(status().isOk())
+                .andReturn();
         List<LocationSO> locations = mapListFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
 
-        assertThat(locations.size()).isEqualTo(11);
+        assertThat(locations.size()).isEqualTo(12);
 
         // delete location
-        mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/api/location/" + locationSO.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/location/" + locationSO.getId()))
+                .andExpect(status().isOk());
 
         // check if deleted
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location/" + locationSO.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.LOCATION_NOT_FOUND.name());
-
+        mvc.perform(MockMvcRequestBuilders.get("/api/location/" + locationSO.getId()))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.LOCATION_NOT_FOUND.name()));
 
         // get location for next tests
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location/2")).andReturn();
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location/1"))
+                .andExpect(status().isOk())
+                .andReturn();
         LocationSO anotherToDelete = mapFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
 
         // get all locations under different user
         super.setAuthentication("user3");
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location")).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location"))
+                .andExpect(status().isOk())
+                .andReturn();
         locations = mapListFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
         assertThat(locations.isEmpty()).isTrue();
 
         // try delete location of different user
-        mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/api/location/" + anotherToDelete.getId())).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.LOCATION_NOT_FOUND.name());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/location/" + anotherToDelete.getId()))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.LOCATION_NOT_FOUND.name()));
 
         // try update location of different user
-        mvcResult = mvc.perform(MockMvcRequestBuilders.put("/api/location")
+        mvc.perform(MockMvcRequestBuilders.put("/api/location")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(anotherToDelete))).andReturn();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(mvcResult.getResponse().getErrorMessage()).isEqualTo(ExceptionCode.LOCATION_NOT_FOUND.name());
+                .content(mapToJson(anotherToDelete)))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(ExceptionCode.LOCATION_NOT_FOUND.name()));
     }
 }

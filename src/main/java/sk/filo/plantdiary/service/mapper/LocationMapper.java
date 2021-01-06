@@ -1,10 +1,9 @@
 package sk.filo.plantdiary.service.mapper;
 
 import org.mapstruct.*;
-import sk.filo.plantdiary.dao.domain.Event;
 import sk.filo.plantdiary.dao.domain.Location;
-import sk.filo.plantdiary.dao.domain.Plant;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.service.so.CreateLocationSO;
+import sk.filo.plantdiary.service.so.LocationSO;
 
 import java.util.List;
 

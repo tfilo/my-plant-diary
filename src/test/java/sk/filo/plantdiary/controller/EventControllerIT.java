@@ -2,16 +2,20 @@ package sk.filo.plantdiary.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sk.filo.plantdiary.BaseIntegrationTest;
 import sk.filo.plantdiary.enums.ExceptionCode;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.service.so.CreateEventSO;
+import sk.filo.plantdiary.service.so.EventSO;
+import sk.filo.plantdiary.service.so.EventTypeSO;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -72,9 +76,9 @@ public class EventControllerIT extends BaseIntegrationTest {
 
         EventSO updatedEventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
         // check if correctly plant name and type name and schedulable wasn't modified
-        assertThat(eventSO).usingRecursiveComparison().isNotEqualTo(updatedEventSO);
+        assertThat(updatedEventSO).usingRecursiveComparison().isNotEqualTo(eventSO);
         // check if other fields was modified correctly
-        assertThat(eventSO).usingRecursiveComparison().ignoringFields("type.code", "type.schedulable", "plant.name").isEqualTo(updatedEventSO);
+        assertThat(updatedEventSO).usingRecursiveComparison().ignoringFields("type.code", "type.schedulable", "plant.name").isEqualTo(eventSO);
 
         // test get of non existing record
         mvc.perform(MockMvcRequestBuilders.get("/api/event/100000"))
@@ -87,7 +91,7 @@ public class EventControllerIT extends BaseIntegrationTest {
                 .andReturn();
 
         eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
-        assertThat(updatedEventSO).usingRecursiveComparison().isEqualTo(eventSO);
+        assertThat(eventSO).usingRecursiveComparison().isEqualTo(updatedEventSO);
 
         // get All tests
         mvc.perform(MockMvcRequestBuilders.get("/api/event/all/100000?page=0&pageSize=10"))
@@ -136,6 +140,7 @@ public class EventControllerIT extends BaseIntegrationTest {
 
         events = mapPagedResponse(mvcResult.getResponse().getContentAsString(), EventSO.class);
 
+        iterator = events.iterator();
         while (iterator.hasNext()) { // check if ordered by date
             EventSO actual = iterator.next();
             assertThat(last.getDateTime().isAfter(actual.getDateTime())).isTrue();
@@ -147,6 +152,7 @@ public class EventControllerIT extends BaseIntegrationTest {
                 .andReturn();
         events = mapPagedResponse(mvcResult.getResponse().getContentAsString(), EventSO.class);
 
+        iterator = events.iterator();
         while (iterator.hasNext()) { // check if ordered by date
             EventSO actual = iterator.next();
             assertThat(last.getDateTime().isAfter(actual.getDateTime())).isTrue();

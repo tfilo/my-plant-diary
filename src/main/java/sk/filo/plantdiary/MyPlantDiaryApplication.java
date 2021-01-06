@@ -12,8 +12,8 @@ import java.security.NoSuchAlgorithmException;
 @EnableConfigurationProperties(ConfigProperties.class)
 public class MyPlantDiaryApplication {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException {
-		SpringApplication.run(MyPlantDiaryApplication.class, args);
-	}
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        SpringApplication.run(MyPlantDiaryApplication.class, args);
+    }
 
 }

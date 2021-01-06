@@ -12,21 +12,19 @@ import javax.validation.constraints.Size;
 @ToString(exclude = "data")
 public class PhotoSO {
 
-    public PhotoSO() {}
+    @NotNull
+    private Long id;
+    @Size(max = 200)
+    private String description;
+    private byte[] data;
+    private PlantBasicSO plant;
+
+    public PhotoSO() {
+    }
 
     public PhotoSO(CreatePhotoSO photo, byte[] data) {
         this.description = photo.getDescription();
         this.data = data;
         this.plant = photo.getPlant();
     }
-
-    @NotNull
-    private Long id;
-
-    @Size(max=200)
-    private String description;
-
-    private byte[] data;
-
-    private PlantBasicSO plant;
 }

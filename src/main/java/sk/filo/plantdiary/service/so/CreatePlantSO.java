@@ -14,10 +14,10 @@ import javax.validation.constraints.Size;
 public class CreatePlantSO {
 
     @NotBlank
-    @Size(max=100)
+    @Size(max = 100)
     private String name;
 
-    @Size(max=1000)
+    @Size(max = 1000)
     private String description;
 
     @Valid

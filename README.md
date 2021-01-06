@@ -3,10 +3,11 @@
 This is personal project for Indoor/Outdoor gardening. App allows you to track gardening history and help to remember
 when to water or fertile plants. Every user has list of own plants. Plant has list of Events. Every event is single
 action done with plant. You can track watering, fertilizing, transplanting, propagation etc. When your plan dies it can
-be deleted, but it will be kept in history section. This can simplify creating new plant of the same kind in future.
-For example if you had tomatoes last season, you can find it in history and create new plant by copying it.
+be deleted, but it will be kept in history section. This can simplify creating new plant of the same kind in future. For
+example if you had tomatoes last season, you can find it in history and create new plant by copying it.
 
 ## Key features
+
 - Tracking plant care (Watering, Fertilizing, etc.)
 - Reminding planned events
 - Tracking historical records
@@ -38,7 +39,8 @@ For example if you had tomatoes last season, you can find it in history and crea
 ### Example
 
 - **Static content** `curl http://localhost:8080`
-- **Get Token:** `curl --header "Content-Type: application/json" --request POST --data '{"username":"user","password":"user"}' http://localhost:8080/api/authenticate`
+- **Get
+  Token:** `curl --header "Content-Type: application/json" --request POST --data '{"username":"user","password":"user"}' http://localhost:8080/api/authenticate`
 - **Example protected endpoint:** `curl GET -H "Authorization: Bearer TOKEN" http://localhost:8080/api/plant`
 
 ### All endpoints - API can change any time, it is under development

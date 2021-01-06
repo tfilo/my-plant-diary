@@ -18,18 +18,18 @@ public class PlantSO {
     private Long id;
 
     @NotBlank
-    @Size(max=100)
+    @Size(max = 100)
     private String name;
 
-    @Size(max=1000)
+    @Size(max = 1000)
     private String description;
 
     @Valid
     private PlantTypeSO type;
 
     @Valid
-    private LocationSO location;
+    private LocationBasicSO location;
 
+    @NotNull
     private Boolean deleted;
-
 }

@@ -9,6 +9,6 @@ public enum ExceptionCode {
     USER_NOT_FOUND,
     LOCATION_NOT_FOUND,
     PHOTO_PROCESSING_FAILED,
-    PHOTO_NOT_FOUND;
-
+    PHOTO_NOT_FOUND,
+    PLANT_TYPE_NOT_FOUND;
 }

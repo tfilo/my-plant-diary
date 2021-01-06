@@ -2,11 +2,13 @@ package sk.filo.plantdiary.service.mapper;
 
 import org.mapstruct.*;
 import sk.filo.plantdiary.dao.domain.Photo;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.service.so.PhotoSO;
+import sk.filo.plantdiary.service.so.PhotoThumbnailSO;
+import sk.filo.plantdiary.service.so.UpdatePhotoSO;
 
 import java.util.List;
 
-@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = { PlantMapper.class })
+@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = {PlantMapper.class})
 public interface PhotoMapper {
 
     @Mappings({

@@ -20,7 +20,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.List;
 
 @Tag(name = "photo", description = "Photo for plants endpoint")
 @RestController

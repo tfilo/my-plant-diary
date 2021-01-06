@@ -20,7 +20,7 @@ public class UserSO {
 
     @NotBlank
     @Email
-    @Size(min=5, max = 255)
+    @Size(min = 5, max = 255)
     private String email;
 
     @Size(max = 50)

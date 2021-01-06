@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString(exclude = { "data", "thumbnail" })
+@ToString(exclude = {"data", "thumbnail"})
 @Entity
 @Table(name = "pd_photo")
 @SequenceGenerator(name = "photo_generator", allocationSize = 1, sequenceName = "pd_photo_seq")

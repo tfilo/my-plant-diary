@@ -15,6 +15,6 @@ public class PlantTypeSO {
     @NotNull
     private Long id;
 
-    @Size(max=80)
+    @Size(max = 80)
     private String code;
 }

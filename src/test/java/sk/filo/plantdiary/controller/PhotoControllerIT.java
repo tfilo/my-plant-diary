@@ -8,12 +8,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sk.filo.plantdiary.BaseIntegrationTest;
 import sk.filo.plantdiary.enums.ExceptionCode;
-import sk.filo.plantdiary.service.so.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import sk.filo.plantdiary.service.so.CreatePhotoSO;
+import sk.filo.plantdiary.service.so.PhotoSO;
+import sk.filo.plantdiary.service.so.PhotoThumbnailSO;
+import sk.filo.plantdiary.service.so.UpdatePhotoSO;
 
 import java.io.File;
 import java.nio.file.Files;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PhotoControllerIT extends BaseIntegrationTest {

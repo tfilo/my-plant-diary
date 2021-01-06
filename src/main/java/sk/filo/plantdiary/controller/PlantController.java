@@ -3,6 +3,7 @@ package sk.filo.plantdiary.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +13,11 @@ import sk.filo.plantdiary.service.so.PlantSO;
 import sk.filo.plantdiary.service.so.PlantTypeSO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "plant", description = "Plant endpoint")
 @RestController
@@ -46,10 +50,23 @@ public class PlantController {
         return new ResponseEntity<>(plantService.getOne(id), HttpStatus.OK);
     }
 
-    @GetMapping("/plant")
-    public ResponseEntity<List<PlantSO>> getAll() {
-        LOGGER.debug("getAll()");
-        return new ResponseEntity<>(plantService.getAll(), HttpStatus.OK);
+    @GetMapping("/plant/all")
+    public ResponseEntity<Page<PlantSO>> getAll(
+            @RequestParam Optional<Boolean> deleted,
+            @NotNull @Min(0) @RequestParam Integer page,
+            @NotNull @Min(5) @Max(100) @RequestParam Integer pageSize) {
+        LOGGER.debug("getAll({}, {}, {})", deleted, page, pageSize);
+        return new ResponseEntity<>(plantService.getAllPaginated(deleted, page, pageSize), HttpStatus.OK);
+    }
+
+    @GetMapping("/plant/byLocation/all")
+    public ResponseEntity<Page<PlantSO>> getAllByLocation(
+            @RequestParam Optional<Long> locationId,
+            @RequestParam Optional<Boolean> deleted,
+            @NotNull @Min(0) @RequestParam Integer page,
+            @NotNull @Min(5) @Max(100) @RequestParam Integer pageSize) {
+        LOGGER.debug("getAllByLocation({}, {}, {})", deleted, page, pageSize);
+        return new ResponseEntity<>(plantService.getAllPaginatedByLocation(locationId, deleted, page, pageSize), HttpStatus.OK);
     }
 
     @DeleteMapping("/plant/{id}")

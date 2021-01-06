@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString(exclude = { "plant" })
+@ToString(exclude = {"plant"})
 @Entity
 @Table(name = "pd_schedule")
 @SequenceGenerator(name = "schedule_generator", allocationSize = 1, sequenceName = "pd_schedule_seq")

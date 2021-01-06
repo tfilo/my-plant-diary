@@ -17,7 +17,7 @@ public class LocationSO {
     private Long id;
 
     @NotBlank
-    @Size(max=80)
+    @Size(max = 80)
     private String name;
 
 }

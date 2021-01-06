@@ -67,6 +67,9 @@ public class EventService {
 
         LOGGER.debug("create {}", event);
         return eventMapper.toSO(eventRepository.save(event));
+
+        // TODO check if schedule for this plant and event type and update schedule based on this event
+        // If date of event on plant is not newest of its type than don't update schedule
     }
 
     public EventSO update(EventSO eventSO) {
@@ -87,6 +90,9 @@ public class EventService {
             // when event owned by different user, throw not found exception
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.EVENT_NOT_FOUND.name());
         }
+
+        // TODO check if schedule for this plant and event type and update schedule based on this event
+        // If date of event on plant is not newest of its type than don't update schedule
     }
 
     public EventSO getOne(Long id) {
@@ -129,6 +135,9 @@ public class EventService {
             // when event owned by different user, throw not found exception
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.EVENT_NOT_FOUND.name());
         }
+
+        // TODO check if schedule for this plant and event type and update schedule based on this event
+        // If date of event on plant is not newest of its type than don't update schedule
     }
 
     public List<EventTypeSO> getAllTypes() {
@@ -151,15 +160,12 @@ public class EventService {
         Plant plant = plantRepository.findById(plantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.PLANT_NOT_FOUND.name()));
 
-        String username = AuthHelper.getUsername();
-
         LOGGER.debug("setPlant {}", plant);
 
-        if (plant.getOwner().getUsername().equals(username)) {
+        if (plant.getOwner().getUsername().equals(AuthHelper.getUsername())) {
             event.setPlant(plant);
         } else { // if username doesn't match, throw exception that plant for this user was not found
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.PLANT_NOT_FOUND.name());
         }
-
     }
 }

@@ -15,7 +15,7 @@ public class UpdatePhotoSO {
     @NotNull
     private Long id;
 
-    @Size(max=200)
+    @Size(max = 200)
     private String description;
 
     private PlantBasicSO plant;

@@ -15,7 +15,7 @@ public class PlantBasicSO {
     @NotNull
     private Long id;
 
-    @Size(max=100)
+    @Size(max = 100)
     private String name;
 
 }
