@@ -38,7 +38,7 @@ example if you had tomatoes last season, you can find it in history and create n
 
 - **Static content** `curl http://localhost:8080`
 - **Get
-  Token:** `curl --header "Content-Type: application/json" --request POST --data '{"username":"user","password":"user"}' http://localhost:8080/api/authenticate`
+  Token:** `curl --header "Content-Type: application/json" --request POST --data '{"username":"USERNAME","password":"PASSWORD"}' http://localhost:8080/api/authenticate`
 - **Example protected endpoint:** `curl GET -H "Authorization: Bearer TOKEN" http://localhost:8080/api/plant`
 
 ### All endpoints - API can change any time, it is under development
