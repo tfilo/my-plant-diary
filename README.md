@@ -9,28 +9,45 @@ example if you had tomatoes last season, you can find it in history and create n
 ## Key features
 
 - Tracking plant care (Watering, Fertilizing, etc.)
-- Reminding planned events
+- Reminding planned events (Watering, Fertilizing, etc.)
 - Tracking historical records
 - Recreating new plants from historical records
 - Group plants by location
 - Group plants by type (Cactus, Succulent, Houseplant, Vegetable, etc.)
 
-## How to
+## Technical information
+
+#### Technologies
+
+Backend
+- SpringBoot
+- JPA
+- Postgres
+
+Tests
+- Integration Tests
+- Random Beans
+- Testcontainers
+
+Frontend
+- Angular (TODO)
 
 #### Requirements
 
-- maven 3.6.3 https://maven.apache.org/download.cgi
+- maven 3.6.3 or newer https://maven.apache.org/download.cgi
 - openjdk 11 https://openjdk.java.net/projects/jdk/11/
 - postgres https://hub.docker.com/_/postgres
+- mail server
 
 #### Build
 
 - `mvn clean install`
 
-#### Run
+#### Run - in development environment
 
 - `./run-postgre-server.sh`
 - `./run-plant-diary.sh`
+- `./run-mail-server.sh`
 
 ## Endpoins
 
@@ -39,7 +56,7 @@ example if you had tomatoes last season, you can find it in history and create n
 - **Static content** `curl http://localhost:8080`
 - **Get
   Token:** `curl --header "Content-Type: application/json" --request POST --data '{"username":"USERNAME","password":"PASSWORD"}' http://localhost:8080/api/authenticate`
-- **Example protected endpoint:** `curl GET -H "Authorization: Bearer TOKEN" http://localhost:8080/api/plant`
+- **Example protected endpoint:** `curl GET -H "Authorization: Bearer TOKEN" http://localhost:8080/api/plant/1`
 
 ### All endpoints - API can change any time, it is under development
 
@@ -93,7 +110,7 @@ example if you had tomatoes last season, you can find it in history and create n
 #### Manage users
 
 - `POST: /api/user/register` - register new user
-- `GET: /api/user/activate/{token}` - activate new user using token from email
+- `GET: /api/user/activate/{token}` - activate new user using activationToken from email
 - `PUT: /api/user` - update user
 - `GET: /api/user` - get logged user
 - `DELETE: /api/user` - delete logged user

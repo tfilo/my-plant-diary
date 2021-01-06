@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class UserSO {
 
     @NotBlank
-    @Size(max = 25)
+    @Size(min = 5, max = 25)
     private String username;
 
     @NotBlank
@@ -29,7 +29,7 @@ public class UserSO {
     @Size(max = 50)
     private String lastName;
 
-    @Size(min = 6, max = 255)
+    @Size(min = 8, max = 255)
     private String password;
 
     @NotNull

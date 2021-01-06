@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.filo.plantdiary.service.UserService;
 import sk.filo.plantdiary.service.so.CreateUserSO;
+import sk.filo.plantdiary.service.so.UpdateUserSO;
 import sk.filo.plantdiary.service.so.UserSO;
 
 import javax.validation.Valid;
@@ -27,26 +28,28 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<UserSO> register(@Valid @NotNull @RequestBody CreateUserSO createUserSO) {
+    public ResponseEntity<Void> register(@Valid @NotNull @RequestBody CreateUserSO createUserSO) {
         LOGGER.debug("create({})", createUserSO);
-        return new ResponseEntity<>(userService.register(createUserSO), HttpStatus.CREATED);
+        userService.register(createUserSO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/user/activate/{token}")
-    public ResponseEntity<UserSO> getOwnUser(@Valid @NotNull @PathVariable String token) {
-        LOGGER.debug("getOne()");
-        return new ResponseEntity<>(userService.activate(token), HttpStatus.OK);
+    public ResponseEntity<Void> activate(@Valid @NotNull @PathVariable String token) {
+        LOGGER.debug("activate()");
+        userService.activate(token);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/user")
-    public ResponseEntity<UserSO> updateOwnUser(@Valid @NotNull @RequestBody UserSO userSO) {
-        LOGGER.debug("update({})", userSO);
-        return new ResponseEntity<>(userService.updateOwnUser(userSO), HttpStatus.OK);
+    public ResponseEntity<UserSO> updateOwnUser(@Valid @NotNull @RequestBody UpdateUserSO updateUserSO) {
+        LOGGER.debug("updateOwnUser({})", updateUserSO);
+        return new ResponseEntity<>(userService.updateOwnUser(updateUserSO), HttpStatus.OK);
     }
 
     @GetMapping("/user")
     public ResponseEntity<UserSO> getOwnUser() {
-        LOGGER.debug("getOne()");
+        LOGGER.debug("getOwnUser()");
         return new ResponseEntity<>(userService.getOwnUser(), HttpStatus.OK);
     }
 

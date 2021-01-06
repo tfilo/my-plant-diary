@@ -6,16 +6,13 @@ import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @ToString(exclude = {"password"})
-public class CreateUserSO {
-
-    @NotBlank
-    @Size(min = 5, max = 25)
-    private String username;
+public class UpdateUserSO {
 
     @NotBlank
     @Email
@@ -29,6 +26,12 @@ public class CreateUserSO {
     private String lastName;
 
     @Size(min = 8, max = 255)
-    @NotBlank
+    private String oldPassword;
+
+    @Size(min = 8, max = 255)
     private String password;
+
+    @NotNull
+    private Boolean enabled;
+
 }
