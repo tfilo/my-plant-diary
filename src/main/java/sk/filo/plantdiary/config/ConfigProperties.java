@@ -22,4 +22,10 @@ public class ConfigProperties {
 
     @NotNull
     private Integer jwtExpirationTime;
+
+    @NotNull
+    private String serverEmail;
+
+    @NotNull
+    private Boolean asyncExecutor;
 }

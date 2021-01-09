@@ -4,17 +4,25 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
-@ToString(exclude = "password")
+@ToString(exclude = {"password", "plants", "locations"})
 @Entity
 @Table(name = "pd_user")
 public class User {
+
+    public User(String username, String email, String password, Boolean enabled) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+    }
+
+    public User() {
+    }
 
     @Id
     @Column(name = "username", nullable = false, length = 25)
@@ -29,14 +37,37 @@ public class User {
     private String password;
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
+    @OneToOne(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @JoinColumn(name = "user_activation_id", nullable = true)
+    private UserActivation userActivation;
 
-    public User(String username, String email, String password, Boolean enabled) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.enabled = enabled;
-    }
+    // To ensure cascade delete
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = false
+    )
+    @JoinColumn(
+            name = "owner_username",
+            nullable = false,
+            insertable = false,
+            updatable = false
+    )
+    private List<Plant> plants;
 
-    public User() {
-    }
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = false
+    )
+    @JoinColumn(
+            name = "owner_username",
+            nullable = false,
+            insertable = false,
+            updatable = false
+    )
+    private List<Location> locations;
 }

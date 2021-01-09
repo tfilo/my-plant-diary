@@ -25,7 +25,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
         // TODO fix token https://jwt.io/#debugger-io
         // TEST correct user, correct password
         AuthSO so = new AuthSO();
-        so.setUsername("user");
+        so.setUsername("username");
         so.setPassword("User123");
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
@@ -40,11 +40,11 @@ public class AuthControllerIT extends BaseIntegrationTest {
 
         assertThat(tokenSO.getType()).isEqualTo("Bearer");
         JwtToken.JwtUser tokenUser = jwtToken.parseToken(tokenSO.getToken());
-        assertThat(tokenUser.getUsername()).isEqualTo("user");
+        assertThat(tokenUser.getUsername()).isEqualTo("username");
         assertThat(tokenUser.getEnabled()).isTrue();
 
         // TEST correct user, incorrect password
-        so.setUsername("user");
+        so.setUsername("username");
         so.setPassword("user123");
         mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -53,7 +53,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
                 .andExpect(status().reason(ExceptionCode.INVALID_CREDENTIALS.name()));
 
         // TEST incorrect user, correct password
-        so.setUsername("user1");
+        so.setUsername("username1");
         so.setPassword("User123");
         mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -62,7 +62,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
                 .andExpect(status().reason(ExceptionCode.INVALID_CREDENTIALS.name()));
 
         // TEST incorrect user, incorrect password
-        so.setUsername("user1");
+        so.setUsername("username1");
         so.setPassword("User223");
         mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
                 .andExpect(status().reason(ExceptionCode.INVALID_CREDENTIALS.name()));
 
         // TEST disabled user
-        so.setUsername("user2");
+        so.setUsername("username2");
         so.setPassword("User123");
         mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)

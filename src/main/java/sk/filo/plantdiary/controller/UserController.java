@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sk.filo.plantdiary.service.UserService;
-import sk.filo.plantdiary.service.so.CreateUserSO;
-import sk.filo.plantdiary.service.so.UpdateUserSO;
-import sk.filo.plantdiary.service.so.UserSO;
+import sk.filo.plantdiary.service.so.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -34,10 +32,10 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/activate/{token}")
-    public ResponseEntity<Void> activate(@Valid @NotNull @PathVariable String token) {
-        LOGGER.debug("activate()");
-        userService.activate(token);
+    @PutMapping("/user/activate")
+    public ResponseEntity<Void> activate(@Valid @NotNull @RequestBody ActivateUserSO activateUserSO) {
+        LOGGER.debug("activate({})", activateUserSO);
+        userService.activate(activateUserSO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -54,10 +52,12 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<Long> delete() {
+    public ResponseEntity<Long> delete(@Valid @NotNull @RequestBody AuthSO authSO) {
         LOGGER.debug("delete()");
-        userService.deleteOwnUser();
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        if (userService.canDelete(authSO)) {
+            userService.deleteUserAsync(authSO.getUsername());
+        }
+        return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
     }
 
 }

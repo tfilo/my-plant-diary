@@ -23,7 +23,7 @@ public class PhotoControllerIT extends BaseIntegrationTest {
 
     @Test
     public void photoTest() throws Exception {
-        super.setAuthentication("user");
+        super.setAuthentication("username");
 
         // test upload photo on non existing plant
         CreatePhotoSO createPhotoSO = easyRandom.nextObject(CreatePhotoSO.class);

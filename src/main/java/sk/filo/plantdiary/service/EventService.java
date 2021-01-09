@@ -101,6 +101,7 @@ public class EventService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.EVENT_NOT_FOUND.name()));
 
         if (event.getPlant().getOwner().getUsername().equals(AuthHelper.getUsername())) {
+            LOGGER.debug("getOne {}", event);
             return eventMapper.toSO(event);
         } else {
             // when event owned by different user, throw not found exception

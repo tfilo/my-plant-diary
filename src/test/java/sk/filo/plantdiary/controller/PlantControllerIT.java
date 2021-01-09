@@ -7,7 +7,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sk.filo.plantdiary.BaseIntegrationTest;
 import sk.filo.plantdiary.enums.ExceptionCode;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.service.so.CreatePlantSO;
+import sk.filo.plantdiary.service.so.PlantSO;
+import sk.filo.plantdiary.service.so.PlantTypeSO;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class PlantControllerIT extends BaseIntegrationTest {
 
     @Test
     public void plantTest() throws Exception {
-        super.setAuthentication("user");
+        super.setAuthentication("username");
 
         // create plant
         CreatePlantSO createPlantSO = easyRandom.nextObject(CreatePlantSO.class);
@@ -110,7 +112,7 @@ public class PlantControllerIT extends BaseIntegrationTest {
         plants = mapPagedResponse(mvcResult.getResponse().getContentAsString(), PlantSO.class);
         assertThat(plants.getTotalElements()).isEqualTo(0);
 
-        super.setAuthentication("user3");
+        super.setAuthentication("username3");
 
         // get all by location but without location
         mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/byLocation?page=0&pageSize=10"))

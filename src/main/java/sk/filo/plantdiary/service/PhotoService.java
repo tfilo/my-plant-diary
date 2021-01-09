@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -66,7 +67,7 @@ public class PhotoService {
         if (plant.getOwner().getUsername().equals(AuthHelper.getUsername())) {
             Photo photo = photoMapper.toBO(photoSO);
             photo.setPlant(plant);
-            photo.setUploaded(LocalDateTime.now());
+            photo.setUploaded(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
 
             try {
                 photo.setThumbnail(resize(photo.getData(), 300f));

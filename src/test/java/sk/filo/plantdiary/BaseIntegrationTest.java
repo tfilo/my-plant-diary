@@ -14,6 +14,10 @@ import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +27,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +42,9 @@ import static io.github.benas.randombeans.FieldPredicates.named;
 @DirtiesContext
 public abstract class BaseIntegrationTest {
 
-    public static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres");
+    public static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:13.1-alpine");
+    public static GenericContainer maildev = new GenericContainer(DockerImageName.parse("djfarrelly/maildev")).withExposedPorts(25);
+
     protected static EasyRandom easyRandom;
     @Autowired
     public MockMvc mvc;
@@ -47,12 +55,17 @@ public abstract class BaseIntegrationTest {
     @Autowired
     public ObjectMapper objectMapper;
 
+
+
     @BeforeAll
     public static void startContainers() {
         postgres.start();
+        maildev.start();
+        System.setProperty("PD_MAIL_PORT", maildev.getMappedPort(25).toString());
         System.setProperty("PD_DATASOURCE", postgres.getJdbcUrl());
         System.setProperty("PD_DATASOURCE_USER", postgres.getUsername());
         System.setProperty("PD_DATASOURCE_PASS", postgres.getPassword());
+        System.setProperty("PD_ASYNC_EXECUTOR", "false"); // in test there must by synchronous task executor
         System.setProperty("PD_FLYWAY_CHECK_LOCATIONS", "classpath:/db/migration,classpath:/db/testdata");
 
         EasyRandomParameters parameters = new EasyRandomParameters();
@@ -111,9 +124,13 @@ public abstract class BaseIntegrationTest {
     }
 
     protected void setAuthentication(String user) {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        user, null, null)
-        );
+        if (user == null) {
+            SecurityContextHolder.clearContext();
+        } else {
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(
+                            user, null, null)
+            );
+        }
     }
 }

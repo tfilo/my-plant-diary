@@ -108,7 +108,21 @@ CREATE TABLE pd_user (
     last_name character varying(50),
     password character varying(255) NOT NULL,
     username character varying(25) NOT NULL,
-    email character varying(255) NOT NULL
+    email character varying(255) NOT NULL,
+    user_activation_id bigint
+);
+
+CREATE SEQUENCE pd_user_activation_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE TABLE pd_user_activation (
+    id bigint NOT NULL,
+    email character varying(255) NOT NULL,
+    activation_token character varying(255) NOT NULL
 );
 
 ALTER TABLE ONLY pd_event
@@ -134,6 +148,9 @@ ALTER TABLE ONLY pd_schedule
 
 ALTER TABLE ONLY pd_user
     ADD CONSTRAINT pd_user_pkey PRIMARY KEY (username);
+
+ALTER TABLE ONLY pd_user_activation
+    ADD CONSTRAINT pd_user_activation_pkey PRIMARY KEY (id);
 
 ALTER TABLE ONLY pd_plant_type
     ADD CONSTRAINT uk_pd_plant_type_code UNIQUE (code);
@@ -173,6 +190,9 @@ ALTER TABLE ONLY pd_event
 
 ALTER TABLE ONLY pd_schedule
     ADD CONSTRAINT pd_schedule_event_type_id FOREIGN KEY (event_type_id) REFERENCES pd_event_type(id);
+
+ALTER TABLE ONLY pd_user
+    ADD CONSTRAINT pd_user_user_activation_id FOREIGN KEY (user_activation_id) REFERENCES pd_user_activation(id);
 
 -- BASIC DATA
 INSERT INTO pd_event_type VALUES (1, 'WATER', true); -- zaliatie

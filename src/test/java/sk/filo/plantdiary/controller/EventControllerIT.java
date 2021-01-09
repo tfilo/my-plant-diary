@@ -12,6 +12,7 @@ import sk.filo.plantdiary.service.so.EventSO;
 import sk.filo.plantdiary.service.so.EventTypeSO;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,7 +27,7 @@ public class EventControllerIT extends BaseIntegrationTest {
 
     @Test
     public void eventTest() throws Exception {
-        super.setAuthentication("user");
+        super.setAuthentication("username");
 
         // test create event on non existing plant and non existing event type
         CreateEventSO createEventSO = easyRandom.nextObject(CreateEventSO.class);
@@ -61,7 +62,7 @@ public class EventControllerIT extends BaseIntegrationTest {
 
         // try update saved event
         eventSO.setId(1L);
-        eventSO.setDateTime(LocalDateTime.now());
+        eventSO.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
         eventSO.setDescription("New event description");
 
         eventSO.getPlant().setName("Name should not change");
@@ -106,7 +107,7 @@ public class EventControllerIT extends BaseIntegrationTest {
         assertThat(events.getTotalElements()).isEqualTo(1);
 
         // add 24 more events
-        LocalDateTime now = LocalDateTime.now().minusDays(50);
+        LocalDateTime now = LocalDateTime.now().minusDays(50).truncatedTo(ChronoUnit.MILLIS);
         List<Integer> range = IntStream.range(1, 100).boxed().collect(Collectors.toCollection(ArrayList::new));
         Collections.shuffle(range);
 
@@ -197,7 +198,7 @@ public class EventControllerIT extends BaseIntegrationTest {
 
         EventSO createdEventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
 
-        super.setAuthentication("user3");
+        super.setAuthentication("username3");
 
         // try to update event of different user
         mvc.perform(MockMvcRequestBuilders.put("/api/event")

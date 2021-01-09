@@ -1,7 +1,6 @@
 package sk.filo.plantdiary.controller;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,7 +17,7 @@ public class LocationControllerIT extends BaseIntegrationTest {
 
     @Test
     public void locationTest() throws Exception {
-        super.setAuthentication("user");
+        super.setAuthentication("username");
 
         // test create location
         LocationSO locationSO = easyRandom.nextObject(LocationSO.class);
@@ -90,12 +89,12 @@ public class LocationControllerIT extends BaseIntegrationTest {
         LocationSO anotherToDelete = mapFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
 
         // get all locations under different user
-        super.setAuthentication("user3");
+        super.setAuthentication("username3");
         mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/location"))
                 .andExpect(status().isOk())
                 .andReturn();
         locations = mapListFromJson(mvcResult.getResponse().getContentAsString(), LocationSO.class);
-        assertThat(locations.isEmpty()).isTrue();
+        assertThat(locations.size()).isEqualTo(1);
 
         // try delete location of different user
         mvc.perform(MockMvcRequestBuilders.delete("/api/location/" + anotherToDelete.getId()))

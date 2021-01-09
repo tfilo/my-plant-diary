@@ -4,19 +4,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sk.filo.plantdiary.dao.domain.User;
+import sk.filo.plantdiary.dao.domain.UserActivation;
+import sk.filo.plantdiary.dao.repository.EventRepository;
+import sk.filo.plantdiary.dao.repository.LocationRepository;
+import sk.filo.plantdiary.dao.repository.PlantRepository;
 import sk.filo.plantdiary.dao.repository.UserRepository;
 import sk.filo.plantdiary.enums.ExceptionCode;
 import sk.filo.plantdiary.jwt.JwtToken;
 import sk.filo.plantdiary.service.helper.AuthHelper;
 import sk.filo.plantdiary.service.mapper.UserMapper;
-import sk.filo.plantdiary.service.so.CreateUserSO;
-import sk.filo.plantdiary.service.so.TokenSO;
-import sk.filo.plantdiary.service.so.UpdateUserSO;
-import sk.filo.plantdiary.service.so.UserSO;
+import sk.filo.plantdiary.service.so.*;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -25,15 +30,38 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    private EventRepository eventRepository;
+
+    private PlantRepository plantRepository;
+
+    private LocationRepository locationRepository;
+
     private UserMapper userMapper;
 
     private PasswordEncoder passwordEncoder;
 
     private JwtToken jwtToken;
 
+    private MailService mailService;
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
+    @Autowired
+    public void setPlantRepository(PlantRepository plantRepository) {
+        this.plantRepository = plantRepository;
+    }
+
+    @Autowired
+    public void setLocationRepository(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
     }
 
     @Autowired
@@ -51,8 +79,14 @@ public class UserService {
         this.jwtToken = jwtToken;
     }
 
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+
     // register new user, set enabled to false
     public void register(CreateUserSO createUserSO) {
+        LOGGER.debug("register({})", createUserSO);
         if (userRepository.existsById(createUserSO.getUsername())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ExceptionCode.USERNAME_IN_USE.name());
         }
@@ -60,56 +94,58 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ExceptionCode.EMAIL_IN_USE.name());
         }
 
-        JwtToken.JwtUser jwtUser = new JwtToken.JwtUser();
-        jwtUser.setUsername(createUserSO.getUsername());
-        jwtUser.setEnabled(false);
-        String activationToken = jwtToken.generateToken(jwtUser);
-        // TODO send email with generated activationToken for activation
-        new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "REGISTRATION NOT IMPLEMENTED YET");
+        String activationToken = UUID.randomUUID().toString();
+        mailService.sendVerificationEmail(createUserSO.getEmail(), activationToken);
+        UserActivation ua = new UserActivation(createUserSO.getEmail(), activationToken);
 
         User user = userMapper.toBO(createUserSO);
+        user.setUserActivation(ua);
         user.setEnabled(false);
         user.setPassword(passwordEncoder.encode(createUserSO.getPassword()));
         userRepository.save(user);
     }
 
     // activate new user by link from email, set enabled to true
-    public void activate(String token) {
-        // TODO check if invalid token will not pass this part
-        JwtToken.JwtUser jwtUser = jwtToken.parseToken(token);
-
-        if (jwtUser != null) {
-            User user = userRepository.findByUsername(jwtUser.getUsername())
+    public void activate(ActivateUserSO activateUserSO) {
+        LOGGER.debug("activate({})", activateUserSO);
+        User user = userRepository.findByUsernameAndUserActivationToken(activateUserSO.getUsername(), activateUserSO.getToken())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.USER_NOT_FOUND.name()));
-            user.setEnabled(true);
-            userRepository.save(user);
-        }
-        // TODO send email about successful activation
+
+        user.setEnabled(true);
+        user.setEmail(user.getUserActivation().getEmail()); // this is important when user only update email of existing account
+        user.setUserActivation(null); // remove activation object
+        userRepository.save(user);
     }
 
     // allow update only logged user
     public UserSO updateOwnUser(UpdateUserSO userSO) {
+        LOGGER.debug("activate({})", userSO);
         User user = userRepository.findByUsername(AuthHelper.getUsername())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.USER_NOT_FOUND.name()));
 
-        if (user.getEmail().equals(userSO.getEmail())) {
+        if (!user.getEmail().equals(userSO.getEmail())) {
+            if (!passwordEncoder.matches(userSO.getOldPassword(), user.getPassword())) { // allow update email only if password provided
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.INVALID_CREDENTIALS.name());
+            }
             if (userRepository.existsByEmail(userSO.getEmail())) { // stop if new email is used by another account
                 throw new ResponseStatusException(HttpStatus.CONFLICT, ExceptionCode.EMAIL_IN_USE.name());
             }
-            new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "EMAIL_UPDATE_NOT_IMPLEMENTED_YET");
-            // TODO send verification email
-            // TODO create mechanism to store old email and return to old one if not activated in expected time period
+
+            String activationToken = UUID.randomUUID().toString();
+            mailService.sendVerificationEmail(userSO.getEmail(), activationToken);
+            UserActivation ua = new UserActivation(userSO.getEmail(), activationToken);
+            user.setUserActivation(ua);
         }
 
         userMapper.toBO(userSO, user);
 
         if (userSO.getPassword() != null && !userSO.getPassword().isBlank()) {
-            if (!passwordEncoder.matches(userSO.getOldPassword(), user.getPassword())) {
+            if (!passwordEncoder.matches(userSO.getOldPassword(), user.getPassword())) { // allow update password only if old password provided
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.INVALID_CREDENTIALS.name());
             }
             user.setPassword(passwordEncoder.encode(userSO.getPassword()));
         }
-
+        LOGGER.debug("activate({})", user);
         return userMapper.toSO(userRepository.save(user));
     }
 
@@ -119,9 +155,23 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.USER_NOT_FOUND.name())));
     }
 
-    // allow delete only own logged user
-    public void deleteOwnUser() {
-        // TODO find all data od user and delete all, maybe async task ?? there can be lot of data, try cascade delete
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "DELETE USER NOT IMPLEMENTED YET");
+    public Boolean canDelete(AuthSO authSO) {
+        if (!authSO.getUsername().equals(AuthHelper.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.INVALID_CREDENTIALS.name());
+        }
+        User user = userRepository.findByUsername(authSO.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.USER_NOT_FOUND.name()));
+        if (!passwordEncoder.matches(authSO.getPassword(), user.getPassword())) { // allow delete only with valid password
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.INVALID_CREDENTIALS.name());
+        }
+        return true;
     }
+
+    // Async to avoid log wait when cascade delete running for lot of rows
+    @Async("pdTaskExecutor")
+    public void deleteUserAsync(String username) {
+        User user = userRepository.getOne(username);
+        userRepository.delete(user);
+    }
+
 }

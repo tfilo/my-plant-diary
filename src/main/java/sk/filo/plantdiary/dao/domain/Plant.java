@@ -6,14 +6,25 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
-@ToString(exclude = {"events", "photos"})
+@ToString(exclude = {"events", "schedules", "photos"})
 @Entity
 @Table(name = "pd_plant")
 @SequenceGenerator(name = "plant_generator", allocationSize = 1, sequenceName = "pd_plant_seq")
 public class Plant implements Serializable {
+
+    public Plant(Long id, String name, User owner, Boolean deleted) {
+        this.id = id;
+        this.name = name;
+        this.owner = owner;
+        this.deleted = deleted;
+    }
+
+    public Plant() {
+    }
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -35,13 +46,43 @@ public class Plant implements Serializable {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
 
-    public Plant(Long id, String name, User owner, Boolean deleted) {
-        this.id = id;
-        this.name = name;
-        this.owner = owner;
-        this.deleted = deleted;
-    }
+    // To ensure cascade delete
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = false
+    )
+    @JoinColumn(
+            name = "plant_id",
+            nullable = false,
+            insertable = false,
+            updatable = false
+    )
+    private List<Event> events;
 
-    public Plant() {
-    }
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = false
+    )
+    @JoinColumn(
+            name = "plant_id",
+            nullable = false,
+            insertable = false,
+            updatable = false
+    )
+    private List<Schedule> schedules;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = false
+    )
+    @JoinColumn(
+            name = "plant_id",
+            nullable = false,
+            insertable = false,
+            updatable = false
+    )
+    private List<Photo> photos;
 }

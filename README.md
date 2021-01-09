@@ -17,7 +17,7 @@ example if you had tomatoes last season, you can find it in history and create n
 
 ## Technical information
 
-#### Technologies
+#### Technologies used
 
 Backend
 - SpringBoot
@@ -32,12 +32,12 @@ Tests
 Frontend
 - Angular (TODO)
 
-#### Requirements
+#### Requirements for build (other versions may work too)
 
-- maven 3.6.3 or newer https://maven.apache.org/download.cgi
-- openjdk 11 https://openjdk.java.net/projects/jdk/11/
-- postgres https://hub.docker.com/_/postgres
-- mail server
+- maven 3.6.3               https://maven.apache.org/download.cgi
+- AdoptOpenJDK 11 J9        https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9
+- postgres:13.1-alpine      https://hub.docker.com/_/postgres
+- djfarrelly/maildev:1.1.0  https://hub.docker.com/r/djfarrelly/maildev
 
 #### Build
 
@@ -110,7 +110,7 @@ Frontend
 #### Manage users
 
 - `POST: /api/user/register` - register new user
-- `GET: /api/user/activate/{token}` - activate new user using activationToken from email
+- `PUT: /api/user/activate` - activate new user using activationToken from email
 - `PUT: /api/user` - update user
 - `GET: /api/user` - get logged user
-- `DELETE: /api/user` - delete logged user
+- `DELETE: /api/user` - delete logged user by username and password (just for verification that user is sure what account is deleting)
