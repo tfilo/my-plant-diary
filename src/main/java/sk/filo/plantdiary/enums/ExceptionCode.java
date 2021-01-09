@@ -12,5 +12,6 @@ public enum ExceptionCode {
     PHOTO_NOT_FOUND,
     PLANT_TYPE_NOT_FOUND,
     USERNAME_IN_USE,
-    EMAIL_IN_USE;
+    EMAIL_IN_USE,
+    SCHEDULE_NOT_FOUND;
 }

@@ -9,7 +9,7 @@ import sk.filo.plantdiary.service.so.EventTypeSO;
 
 import java.util.List;
 
-@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = {PlantMapper.class})
+@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = {PlantMapper.class, EventTypeMapper.class})
 public interface EventMapper {
 
     EventSO toSO(Event event);
@@ -30,11 +30,4 @@ public interface EventMapper {
     void toBO(EventSO eventSO, @MappingTarget Event event);
 
     List<EventSO> toEventSOList(List<Event> events);
-
-    List<EventTypeSO> toEventTypeSOList(List<EventType> eventTypes);
-
-    EventTypeSO toSO(EventType eventType);
-
-    EventType toBO(EventTypeSO eventTypeSO);
-
 }

@@ -92,7 +92,8 @@ CREATE TABLE pd_schedule (
     next timestamp without time zone NOT NULL,
     repeat_every integer,
     plant_id bigint NOT NULL,
-    event_type_id bigint NOT NULL
+    event_type_id bigint NOT NULL,
+    owner_username character varying(25) NOT NULL
 );
 
 CREATE SEQUENCE pd_schedule_seq
@@ -169,6 +170,9 @@ ALTER TABLE ONLY pd_plant
 
 ALTER TABLE ONLY pd_schedule
     ADD CONSTRAINT fk_pd_schedule_plant_id FOREIGN KEY (plant_id) REFERENCES pd_plant(id);
+
+ALTER TABLE ONLY pd_schedule
+    ADD CONSTRAINT fk_pd_schedule_owner_username FOREIGN KEY (owner_username) REFERENCES pd_user(username);
 
 ALTER TABLE ONLY pd_plant
     ADD CONSTRAINT fk_pd_plant_location_id FOREIGN KEY (location_id) REFERENCES pd_location(id);

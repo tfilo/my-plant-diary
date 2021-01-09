@@ -22,11 +22,11 @@ public class Schedule implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "plant_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "plant_id", nullable = false)
     private Plant plant;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "event_type_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "event_type_id", nullable = false)
     private EventType type;
 
     @Column(name = "repeat_every", nullable = true)
@@ -37,4 +37,8 @@ public class Schedule implements Serializable {
 
     @Column(name = "next", nullable = false)
     private LocalDateTime next;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "owner_username", nullable = false)
+    private User owner;
 }

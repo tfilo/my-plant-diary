@@ -18,6 +18,7 @@ import sk.filo.plantdiary.dao.repository.PlantRepository;
 import sk.filo.plantdiary.enums.ExceptionCode;
 import sk.filo.plantdiary.service.helper.AuthHelper;
 import sk.filo.plantdiary.service.mapper.EventMapper;
+import sk.filo.plantdiary.service.mapper.EventTypeMapper;
 import sk.filo.plantdiary.service.so.CreateEventSO;
 import sk.filo.plantdiary.service.so.EventSO;
 import sk.filo.plantdiary.service.so.EventTypeSO;
@@ -37,6 +38,8 @@ public class EventService {
 
     private EventMapper eventMapper;
 
+    private EventTypeMapper eventTypeMapper;
+
     @Autowired
     public void setEventRepository(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -55,6 +58,11 @@ public class EventService {
     @Autowired
     public void setEventMapper(EventMapper eventMapper) {
         this.eventMapper = eventMapper;
+    }
+
+    @Autowired
+    public void setEventTypeMapper(EventTypeMapper eventTypeMapper) {
+        this.eventTypeMapper = eventTypeMapper;
     }
 
     public EventSO create(CreateEventSO createEventSO) {
@@ -110,7 +118,7 @@ public class EventService {
     }
 
     public Page<EventSO> getAllByPlantIdPaginated(Long plantId, Integer page, Integer pageSize) {
-        LOGGER.debug("getAllByPlantId {}", plantId);
+        LOGGER.debug("getAllByPlantIdPaginated {}", plantId);
 
         PageRequest pr = PageRequest.of(page, pageSize, Sort.by("dateTime").descending());
 
@@ -143,7 +151,7 @@ public class EventService {
 
     public List<EventTypeSO> getAllTypes() {
         LOGGER.debug("getAllTypes");
-        return eventMapper.toEventTypeSOList(eventTypeRepository.findAll());
+        return eventTypeMapper.toEventTypeSOList(eventTypeRepository.findAll());
     }
 
     private void setEventType(Long eventTypeId, Event event) {
