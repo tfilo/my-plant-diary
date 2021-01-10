@@ -10,6 +10,7 @@ import sk.filo.plantdiary.enums.ExceptionCode;
 import sk.filo.plantdiary.service.so.CreateEventSO;
 import sk.filo.plantdiary.service.so.EventSO;
 import sk.filo.plantdiary.service.so.EventTypeSO;
+import sk.filo.plantdiary.service.so.UpdateEventSO;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -56,30 +57,29 @@ public class EventControllerIT extends BaseIntegrationTest {
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        EventSO eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
-        assertThat(eventSO).usingRecursiveComparison().ignoringFields("id", "type.code", "type.schedulable", "plant.name").isEqualTo(createEventSO);
-        assertThat(eventSO.getId()).isNotNull();
+        UpdateEventSO updateEventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), UpdateEventSO.class);
+        assertThat(updateEventSO).usingRecursiveComparison().ignoringFields("id", "type.code", "type.schedulable", "plant.name").isEqualTo(createEventSO);
+        assertThat(updateEventSO.getId()).isNotNull();
 
         // try update saved event
-        eventSO.setId(1L);
-        eventSO.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-        eventSO.setDescription("New event description");
+        updateEventSO.setId(1L);
+        updateEventSO.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        updateEventSO.setDescription("New event description");
 
-        eventSO.getPlant().setName("Name should not change");
-        eventSO.getType().setCode("Code should not change");
-        eventSO.getType().setSchedulable(!eventSO.getType().getSchedulable());
+        updateEventSO.getType().setCode("Code should not change");
+        updateEventSO.getType().setSchedulable(!updateEventSO.getType().getSchedulable());
 
         mvcResult = mvc.perform(MockMvcRequestBuilders.put("/api/event")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapToJson(eventSO)))
+                .content(mapToJson(updateEventSO)))
                 .andExpect(status().isOk())
                 .andReturn();
 
         EventSO updatedEventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
         // check if correctly plant name and type name and schedulable wasn't modified
-        assertThat(updatedEventSO).usingRecursiveComparison().isNotEqualTo(eventSO);
+        assertThat(updatedEventSO).usingRecursiveComparison().isNotEqualTo(updateEventSO);
         // check if other fields was modified correctly
-        assertThat(updatedEventSO).usingRecursiveComparison().ignoringFields("type.code", "type.schedulable", "plant.name").isEqualTo(eventSO);
+        assertThat(updatedEventSO).usingRecursiveComparison().ignoringFields("type.code", "type.schedulable", "plant").isEqualTo(updateEventSO);
 
         // test get of non existing record
         mvc.perform(MockMvcRequestBuilders.get("/api/event/100000"))
@@ -91,7 +91,7 @@ public class EventControllerIT extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
+        EventSO eventSO = mapFromJson(mvcResult.getResponse().getContentAsString(), EventSO.class);
         assertThat(eventSO).usingRecursiveComparison().isEqualTo(updatedEventSO);
 
         // get All tests

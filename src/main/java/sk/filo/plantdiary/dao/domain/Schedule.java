@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -36,7 +36,7 @@ public class Schedule implements Serializable {
     private Boolean autoUpdate;
 
     @Column(name = "next", nullable = false)
-    private LocalDateTime next;
+    private LocalDate next;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "owner_username", nullable = false)

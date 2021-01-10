@@ -89,7 +89,7 @@ CREATE SEQUENCE pd_plant_type_seq
 CREATE TABLE pd_schedule (
     id bigint NOT NULL,
     auto_update boolean NOT NULL,
-    next timestamp without time zone NOT NULL,
+    next date NOT NULL,
     repeat_every integer,
     plant_id bigint NOT NULL,
     event_type_id bigint NOT NULL,

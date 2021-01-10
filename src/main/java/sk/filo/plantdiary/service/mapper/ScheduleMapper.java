@@ -2,7 +2,8 @@ package sk.filo.plantdiary.service.mapper;
 
 import org.mapstruct.*;
 import sk.filo.plantdiary.dao.domain.Schedule;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.service.so.CreateScheduleSO;
+import sk.filo.plantdiary.service.so.ScheduleSO;
 
 import java.util.List;
 

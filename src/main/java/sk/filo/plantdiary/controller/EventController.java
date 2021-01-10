@@ -11,6 +11,7 @@ import sk.filo.plantdiary.service.EventService;
 import sk.filo.plantdiary.service.so.CreateEventSO;
 import sk.filo.plantdiary.service.so.EventSO;
 import sk.filo.plantdiary.service.so.EventTypeSO;
+import sk.filo.plantdiary.service.so.UpdateEventSO;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -38,9 +39,9 @@ public class EventController {
     }
 
     @PutMapping("/event")
-    public ResponseEntity<EventSO> update(@Valid @NotNull @RequestBody EventSO eventSO) {
-        LOGGER.debug("update({})", eventSO);
-        return new ResponseEntity<>(eventService.update(eventSO), HttpStatus.OK);
+    public ResponseEntity<EventSO> update(@Valid @NotNull @RequestBody UpdateEventSO updateEventSO) {
+        LOGGER.debug("update({})", updateEventSO);
+        return new ResponseEntity<>(eventService.update(updateEventSO), HttpStatus.OK);
     }
 
     @GetMapping("/event/{id}")

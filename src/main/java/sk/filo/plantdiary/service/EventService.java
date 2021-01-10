@@ -22,7 +22,9 @@ import sk.filo.plantdiary.service.mapper.EventTypeMapper;
 import sk.filo.plantdiary.service.so.CreateEventSO;
 import sk.filo.plantdiary.service.so.EventSO;
 import sk.filo.plantdiary.service.so.EventTypeSO;
+import sk.filo.plantdiary.service.so.UpdateEventSO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,6 +41,8 @@ public class EventService {
     private EventMapper eventMapper;
 
     private EventTypeMapper eventTypeMapper;
+
+    private ScheduleService scheduleService;
 
     @Autowired
     public void setEventRepository(EventRepository eventRepository) {
@@ -65,6 +69,11 @@ public class EventService {
         this.eventTypeMapper = eventTypeMapper;
     }
 
+    @Autowired
+    public void setScheduleService(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
+
     public EventSO create(CreateEventSO createEventSO) {
         LOGGER.debug("create {}", createEventSO);
 
@@ -74,33 +83,47 @@ public class EventService {
         setPlant(createEventSO.getPlant().getId(), event);
 
         LOGGER.debug("create {}", event);
-        return eventMapper.toSO(eventRepository.save(event));
+        Event saved = eventRepository.save(event);
 
-        // TODO check if schedule for this plant and event type and update schedule based on this event
-        // If date of event on plant is not newest of its type than don't update schedule
+        scheduleService.updateScheduleAsync(event.getType(), event.getPlant().getId());
+
+        return eventMapper.toSO(saved);
     }
 
-    public EventSO update(EventSO eventSO) {
-        LOGGER.debug("update {}", eventSO);
+    public EventSO update(UpdateEventSO updateEventSO) {
+        LOGGER.debug("update {}", updateEventSO);
 
-        Event event = eventRepository.findById(eventSO.getId())
+        Event event = eventRepository.findById(updateEventSO.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.EVENT_NOT_FOUND.name()));
 
-        if (event.getPlant().getOwner().getUsername().equals(AuthHelper.getUsername())) {
-            eventMapper.toBO(eventSO, event);
+        EventType oldEventType = event.getType();
+        LocalDateTime oldDateTime = updateEventSO.getDateTime();
 
-            setEventType(eventSO.getType().getId(), event);
-            setPlant(eventSO.getPlant().getId(), event);
+        if (event.getPlant().getOwner().getUsername().equals(AuthHelper.getUsername())) {
+            eventMapper.toBO(updateEventSO, event);
+
+            setEventType(updateEventSO.getType().getId(), event);
 
             LOGGER.debug("update {}", event);
-            return eventMapper.toSO(eventRepository.save(event));
+            Event save = eventRepository.save(event);
+
+            // changed type so need to update old type too
+            if (!oldEventType.getId().equals(event.getType().getId())) {
+                // event type changed, update old and new eventType to set correct schedules
+                scheduleService.updateScheduleAsync(oldEventType, event.getPlant().getId());
+                scheduleService.updateScheduleAsync(event.getType(), event.getPlant().getId());
+            } else {
+                // update this event type but only if time has changed
+                if (!oldDateTime.equals(event.getDateTime())) {
+                    scheduleService.updateScheduleAsync(event.getType(), event.getPlant().getId());
+                }
+            }
+
+            return eventMapper.toSO(save);
         } else {
             // when event owned by different user, throw not found exception
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.EVENT_NOT_FOUND.name());
         }
-
-        // TODO check if schedule for this plant and event type and update schedule based on this event
-        // If date of event on plant is not newest of its type than don't update schedule
     }
 
     public EventSO getOne(Long id) {
@@ -140,13 +163,11 @@ public class EventService {
 
         if (event.getPlant().getOwner().getUsername().equals(AuthHelper.getUsername())) {
             eventRepository.delete(event);
+            scheduleService.updateScheduleAsync(event.getType(), event.getPlant().getId());
         } else {
             // when event owned by different user, throw not found exception
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.EVENT_NOT_FOUND.name());
         }
-
-        // TODO check if schedule for this plant and event type and update schedule based on this event
-        // If date of event on plant is not newest of its type than don't update schedule
     }
 
     public List<EventTypeSO> getAllTypes() {

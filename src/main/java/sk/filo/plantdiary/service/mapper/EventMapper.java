@@ -2,10 +2,9 @@ package sk.filo.plantdiary.service.mapper;
 
 import org.mapstruct.*;
 import sk.filo.plantdiary.dao.domain.Event;
-import sk.filo.plantdiary.dao.domain.EventType;
 import sk.filo.plantdiary.service.so.CreateEventSO;
 import sk.filo.plantdiary.service.so.EventSO;
-import sk.filo.plantdiary.service.so.EventTypeSO;
+import sk.filo.plantdiary.service.so.UpdateEventSO;
 
 import java.util.List;
 
@@ -24,10 +23,9 @@ public interface EventMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "type", ignore = true),
-            @Mapping(target = "plant", ignore = true)
+            @Mapping(target = "type", ignore = true)
     })
-    void toBO(EventSO eventSO, @MappingTarget Event event);
+    void toBO(UpdateEventSO eventSO, @MappingTarget Event event);
 
     List<EventSO> toEventSOList(List<Event> events);
 }

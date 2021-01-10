@@ -21,7 +21,6 @@ import sk.filo.plantdiary.service.mapper.UserMapper;
 import sk.filo.plantdiary.service.so.*;
 
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {

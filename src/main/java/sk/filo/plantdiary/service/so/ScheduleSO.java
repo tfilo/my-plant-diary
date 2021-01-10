@@ -5,8 +5,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -33,6 +36,5 @@ public class ScheduleSO {
     private Boolean autoUpdate;
 
     @NotNull
-    @Future
-    private LocalDateTime next;
+    private LocalDate next;
 }

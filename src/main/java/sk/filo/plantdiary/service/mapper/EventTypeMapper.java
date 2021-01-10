@@ -1,6 +1,7 @@
 package sk.filo.plantdiary.service.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.NullValueCheckStrategy;
 import sk.filo.plantdiary.dao.domain.EventType;
 import sk.filo.plantdiary.service.so.EventTypeSO;
 

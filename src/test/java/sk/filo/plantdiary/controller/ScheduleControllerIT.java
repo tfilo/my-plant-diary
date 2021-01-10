@@ -7,10 +7,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sk.filo.plantdiary.BaseIntegrationTest;
 import sk.filo.plantdiary.enums.ExceptionCode;
-import sk.filo.plantdiary.service.so.*;
+import sk.filo.plantdiary.service.so.CreateScheduleSO;
+import sk.filo.plantdiary.service.so.ScheduleSO;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +24,7 @@ public class ScheduleControllerIT extends BaseIntegrationTest {
         // test create event on non existing plant and non existing event type
         CreateScheduleSO createScheduleSO = easyRandom.nextObject(CreateScheduleSO.class);
         createScheduleSO.setRepeatEvery(10);
-        createScheduleSO.setNext(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.MILLIS));
+        createScheduleSO.setNext(LocalDate.now());
         createScheduleSO.getPlant().setId(100000L);
         createScheduleSO.getType().setId(100000L);
 
@@ -56,7 +56,7 @@ public class ScheduleControllerIT extends BaseIntegrationTest {
 
         // try update saved event
         scheduleSO.setId(1L);
-        scheduleSO.setNext(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.MILLIS));
+        scheduleSO.setNext(LocalDate.now().plusDays(2));
         scheduleSO.setRepeatEvery(5);
         scheduleSO.setAutoUpdate(true);
         scheduleSO.getPlant().setName("Name should not change");
@@ -108,5 +108,7 @@ public class ScheduleControllerIT extends BaseIntegrationTest {
         mvc.perform(MockMvcRequestBuilders.get("/api/schedule/" + scheduleSO.getId()))
                 .andExpect(status().isBadRequest())
                 .andExpect(status().reason(ExceptionCode.SCHEDULE_NOT_FOUND.name()));
+
+        // TODO test if schedule is updated based on created/updated/deleted events
     }
 }

@@ -1,11 +1,8 @@
 package sk.filo.plantdiary.controller;
 
-import org.apache.tomcat.jni.Time;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -13,7 +10,6 @@ import sk.filo.plantdiary.BaseIntegrationTest;
 import sk.filo.plantdiary.dao.domain.*;
 import sk.filo.plantdiary.dao.repository.*;
 import sk.filo.plantdiary.enums.ExceptionCode;
-import sk.filo.plantdiary.service.UserService;
 import sk.filo.plantdiary.service.so.*;
 
 import java.io.File;
@@ -42,6 +38,9 @@ public class UserControllerIT extends BaseIntegrationTest {
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    ScheduleRepository scheduleRepository;
 
     @Autowired
     EventTypeRepository eventTypeRepository;
@@ -211,6 +210,7 @@ public class UserControllerIT extends BaseIntegrationTest {
         int addPlants = 3;
         int addPhotos = 2;
         int addEvents = 3;
+        int addSchedulers = 3;
 
         // store info about row count in database
         Long userBefore = userRepository.count();
@@ -220,6 +220,7 @@ public class UserControllerIT extends BaseIntegrationTest {
         Long photoBefore = photoRepository.count();
         Long eventBefore = eventRepository.count();
         Long eventTypeBefore = eventTypeRepository.count();
+        Long scheduleBefore = scheduleRepository.count();
 
         User user = easyRandom.nextObject(User.class);
         user.setEnabled(true);
@@ -231,11 +232,11 @@ public class UserControllerIT extends BaseIntegrationTest {
         byte[] testFile = Files.readAllBytes(photoFile.toPath());
 
         // create lot of data in database
-        for (int i = 0; i < addLocations; i++) { // create 100 locations
+        for (int i = 0; i < addLocations; i++) { // create X locations
             Location location = easyRandom.nextObject(Location.class);
             location.setOwner(user);
             location = locationRepository.save(location);
-            for (int j = 0; j < addPlants; j++) { // create 100 plants in every location
+            for (int j = 0; j < addPlants; j++) { // create X plants in every location
                 Plant plant = easyRandom.nextObject(Plant.class);
                 plant.setType(plantTypeRepository.getOne(1L));
                 plant.setOwner(user);
@@ -250,12 +251,19 @@ public class UserControllerIT extends BaseIntegrationTest {
                     photoRepository.save(photo);
                 }
 
-                for (int k = 0; k < addEvents; k++) { // insert 10000 events in every plant
+                for (int k = 0; k < addEvents; k++) { // insert X events in every plant
                     Event event = easyRandom.nextObject(Event.class);
                     event.setPlant(plant);
                     event.setType(eventTypeRepository.getOne(1L));
                     eventRepository.save(event);
-                    // TODO insert schedules
+                }
+
+                for (int k = 0; k < addSchedulers; k++) { // insert X events in every plant
+                    Schedule schedule = easyRandom.nextObject(Schedule.class);
+                    schedule.setPlant(plant);
+                    schedule.setType(eventTypeRepository.getOne(new Long(k + 1)));
+                    schedule.setOwner(user);
+                    scheduleRepository.save(schedule);
                 }
             }
         }
@@ -268,6 +276,7 @@ public class UserControllerIT extends BaseIntegrationTest {
         Long photoMid = photoRepository.count();
         Long eventMid = eventRepository.count();
         Long eventTypeMid = eventTypeRepository.count();
+        Long scheduleMid = scheduleRepository.count();
 
         assertThat(userMid).isEqualTo(userBefore + 1);
         assertThat(locationMid).isEqualTo(locationBefore + addLocations);
@@ -275,6 +284,7 @@ public class UserControllerIT extends BaseIntegrationTest {
         assertThat(plantTypeMid).isEqualTo(plantTypeBefore);
         assertThat(photoMid).isEqualTo(photoBefore + addLocations * addPlants * addPhotos);
         assertThat(eventMid).isEqualTo(eventBefore + addLocations * addPlants * addEvents);
+        assertThat(scheduleMid).isEqualTo(scheduleBefore + addLocations * addPlants * addSchedulers);
         assertThat(eventTypeMid).isEqualTo(eventTypeBefore);
 
         // cascade delete
@@ -295,6 +305,7 @@ public class UserControllerIT extends BaseIntegrationTest {
         Long photoAfter = photoRepository.count();
         Long eventAfter = eventRepository.count();
         Long eventTypeAfter = eventTypeRepository.count();
+        Long scheduleAfter = scheduleRepository.count();
 
         assertThat(userAfter).isEqualTo(userBefore);
         assertThat(locationAfter).isEqualTo(locationBefore);
@@ -303,5 +314,6 @@ public class UserControllerIT extends BaseIntegrationTest {
         assertThat(photoAfter).isEqualTo(photoBefore);
         assertThat(eventAfter).isEqualTo(eventBefore);
         assertThat(eventTypeAfter).isEqualTo(eventTypeBefore);
+        assertThat(scheduleAfter).isEqualTo(scheduleBefore);
     }
 }
