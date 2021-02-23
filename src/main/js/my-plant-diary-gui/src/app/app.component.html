@@ -1,0 +1,19 @@
+<nav class="w3-sidebar w3-bar-block w3-animate-left w3-collapse w3-card-4" #sidebar>
+    <a routerLink="/login" routerLinkActive="active" class="w3-bar-item w3-button">Prihlásenie</a>
+    <a routerLink="/registration" routerLinkActive="active" class="w3-bar-item w3-button">Registrácia</a>
+</nav>
+
+<div class="main-header w3-container w3-teal w3-card-4">
+    <h1>
+        <a class="w3-left w3-button w3-hide-large"
+           (click)="sidebarToggle()"
+           title="Menu">
+            <fa-icon [icon]="faBars"></fa-icon>
+        </a>
+        <span>Pestovateľský denník</span>
+    </h1>
+</div>
+
+<div class="w3-main main-content w3-padding-16" #mainContent>
+    <router-outlet></router-outlet>
+</div>

@@ -115,7 +115,7 @@ public class PlantControllerIT extends BaseIntegrationTest {
         super.setAuthentication("username3");
 
         // get all by location but without location
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/byLocation?page=0&pageSize=10"))
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/by-location?page=0&pageSize=10"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -123,7 +123,7 @@ public class PlantControllerIT extends BaseIntegrationTest {
         assertThat(plants.getTotalElements()).isEqualTo(1);
 
         // get all by location but without location and deleted
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/byLocation?deleted=true&page=0&pageSize=10"))
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/by-location?deleted=true&page=0&pageSize=10"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -131,7 +131,7 @@ public class PlantControllerIT extends BaseIntegrationTest {
         assertThat(plants.getTotalElements()).isEqualTo(2);
 
         // get all by location 1
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/byLocation?locationId=1&page=0&pageSize=10"))
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/by-location?locationId=1&page=0&pageSize=10"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -139,7 +139,7 @@ public class PlantControllerIT extends BaseIntegrationTest {
         assertThat(plants.getTotalElements()).isEqualTo(2);
 
         // get all by location 1 and deleted
-        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/byLocation?locationId=1&deleted=true&page=0&pageSize=10"))
+        mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/plant/by-location?locationId=1&deleted=true&page=0&pageSize=10"))
                 .andExpect(status().isOk())
                 .andReturn();
 

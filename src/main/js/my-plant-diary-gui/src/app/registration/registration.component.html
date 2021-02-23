@@ -1,0 +1,40 @@
+<div class="w3-row">
+    <div class="w3-col l2 w3-hide-small w3-hide-medium">
+        &nbsp;
+        <!-- PLACEHOLDER -->
+    </div>
+    <div class="w3-card-4 w3-col l8 m12 s12">
+        <div class="w3-container w3-teal">
+            <h2>Registrácia</h2>
+        </div>
+        <form class="w3-container" [formGroup]="registrationForm">
+            <p>
+                <label>Používateľské meno</label>
+                <input class="w3-input" type="text" formControlName="username">
+            </p>
+            <p>
+                <label>Email</label>
+                <input class="w3-input" type="text" formControlName="email">
+            </p>
+            <p>
+                <label>Meno</label>
+                <input class="w3-input" type="text" formControlName="firstName">
+            </p>
+            <p>
+                <label>Priezvisko</label>
+                <input class="w3-input" type="text" formControlName="lastName">
+            </p>
+            <p>
+                <label>Heslo</label>
+                <input class="w3-input" type="password" formControlName="password">
+            </p>
+            <p>
+                <label>Zopakovať heslo</label>
+                <input class="w3-input" type="password" formControlName="password2">
+            </p>
+            <p>
+                <button class="w3-btn w3-teal">Zaregistrovať sa</button>
+            </p>
+        </form>
+    </div>
+</div>

@@ -1,6 +1,0 @@
-<html>
-<head></head>
-<body>
-TEST
-</body>
-</html>

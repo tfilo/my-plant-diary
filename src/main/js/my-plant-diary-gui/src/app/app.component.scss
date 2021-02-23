@@ -1,0 +1,39 @@
+.w3-sidebar {
+    top: 46pt;
+    bottom: 0pt;
+    width: 200pt;
+    height: auto;
+}
+
+.main-content {
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-top: 46pt;
+    margin-left: 200pt;
+}
+
+.main-header {
+    position: fixed;
+    width: 100%;
+    height: 46pt;
+    padding-left: 0px;
+    padding-top: 0px;
+    top: 0px;
+}
+
+.main-header>h1 {
+    font-size: 30px;
+    margin-top: 0px;
+}
+
+.main-header>h1>span {
+    margin-top: 7px;
+    position: absolute;
+    @media (min-width: 993px)  {
+      margin-left: 16px;
+    }
+}
+
+a.active {
+    background-color: #009688;
+}

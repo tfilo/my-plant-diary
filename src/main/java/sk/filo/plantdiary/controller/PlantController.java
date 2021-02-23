@@ -59,7 +59,7 @@ public class PlantController {
         return new ResponseEntity<>(plantService.getAllPaginated(deleted, page, pageSize), HttpStatus.OK);
     }
 
-    @GetMapping("/plant/byLocation")
+    @GetMapping("/plant/by-location")
     public ResponseEntity<Page<PlantSO>> getAllByLocation(
             @RequestParam Optional<Long> locationId,
             @RequestParam Optional<Boolean> deleted,
