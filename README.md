@@ -60,57 +60,10 @@ Frontend
 
 ### All endpoints - API can change any time, it is under development
 
-#### Authentication
+#### OpenAPI specification
 
-- `POST: /api/authenticate` - return generated Token
+- http://localhost:8080/v3/api-docs
+- http://localhost:8080/v3/api-docs.yaml
+- http://localhost:8080/swagger-ui.html
 
-#### Plant - linked to autenticated USER
-
-- `POST: /api/plant` - create Plant
-- `PUT: /api/plant` - update Plant
-- `GET: /api/plant/{id}` - get Plant by id
-- `GET: /api/plant` - get all Plants
-- `GET: /api/plant/by-location` - get all Plants by location, if locationId param not specified than will return plants without specified location
-- `DELETE: /api/plant/{id}` - delete Plant by id
-- `GET: /api/plant/type` - get all PlantTypes
-
-#### Event - linked to specific PLANT of autenticated USER
-
-- `POST: /api/event` - create Event
-- `PUT: /api/event` - update Event
-- `GET: /api/event/{id}` - get Event by id
-- `GET: /api/event/all/{plantId}` - get all Events by plantId
-- `DELETE: /api/event/{id}` - delete Event by id
-- `GET: /api/event/type` - get all EventTypes
-
-#### Location - linked to autenticated USER
-
-- `POST: /api/location` - create Location
-- `PUT: /api/location` - update Location
-- `GET: /api/location/{id}` - get Location by id
-- `GET: /api/location` - get all Locations
-- `DELETE: /api/location/{id}` - delete Location by id
-
-#### Schedule - linked to specific PLANT of autenticated USER
-
-- `POST: /api/schedule` - create Schedule
-- `PUT: /api/schedule` - update Schedule
-- `GET: /api/schedule/{id}` - get Schedule by id
-- `GET: /api/schedule` - get all Schedules
-- `DELETE: /api/schedule/{id}` - delete Schedule by id
-
-#### Photo - upload photos to Plant
-
-- `POST: /api/photo` - upload Photo
-- `PUT: /api/photo` - update Photo description
-- `GET: /api/photo/{id}` - get Photo by id
-- `GET: /api/photo/all/{plantId}` - get all Photo Thumbnails
-- `DELETE: /api/photo/{id}` - delete Photo by id
-
-#### Manage users
-
-- `POST: /api/user/register` - register new user
-- `PUT: /api/user/activate` - activate new user using activationToken from email
-- `PUT: /api/user` - update user
-- `GET: /api/user` - get logged user
-- `DELETE: /api/user` - delete logged user by username and password (just for verification that user is sure what account is deleting)
+You can generate angular api using  https://www.npmjs.com/package/ng-openapi-gen

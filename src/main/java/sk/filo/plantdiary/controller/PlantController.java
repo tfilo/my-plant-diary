@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Tag(name = "plant", description = "Plant endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class PlantController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlantController.class);

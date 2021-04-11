@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Tag(name = "user", description = "User endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);

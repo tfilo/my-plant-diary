@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @Tag(name = "authenticate", description = "User authentication endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);

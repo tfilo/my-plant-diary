@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "location", description = "Plant locations endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class LocationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationController.class);

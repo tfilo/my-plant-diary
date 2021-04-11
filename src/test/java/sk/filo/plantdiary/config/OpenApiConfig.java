@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI customOpenAPI(@Value("${server.servlet.context-path:/api}") String contextPath) {
+    public OpenAPI customOpenAPI(@Value("${server.servlet.context-path:/}") String contextPath) {
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes("basicAuth", new SecurityScheme()

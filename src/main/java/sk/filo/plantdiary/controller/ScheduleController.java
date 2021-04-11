@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Tag(name = "schedule", description = "Schedule for plant care endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class ScheduleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);

@@ -21,7 +21,7 @@ import java.util.List;
 
 @Tag(name = "event", description = "Plant events endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class EventController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);

@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @Tag(name = "photo", description = "Photo for plants endpoint")
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class PhotoController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoController.class);

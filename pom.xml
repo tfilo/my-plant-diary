@@ -82,6 +82,18 @@
             <version>2.1.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.104</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -98,19 +110,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-webmvc-core</artifactId>
-            <version>1.5.2</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.github.classgraph</groupId>
-                    <artifactId>classgraph</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.benas</groupId>
@@ -254,7 +253,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run-script build</arguments>
+                            <arguments>run-script build-maven</arguments>
                         </configuration>
                     </execution>
                 </executions>
