@@ -7,7 +7,7 @@
         <div class="w3-container w3-teal">
             <h2>Registrácia</h2>
         </div>
-        <form class="w3-container" [formGroup]="registrationForm">
+        <form class="w3-container" [formGroup]="registrationForm" (submit)="submit()">
             <p>
                 <label>Používateľské meno</label>
                 <input class="w3-input" type="text" formControlName="username">
@@ -33,7 +33,7 @@
                 <input class="w3-input" type="password" formControlName="password2">
             </p>
             <p>
-                <button class="w3-btn w3-teal">Zaregistrovať sa</button>
+                <button type="submit" class="w3-btn w3-teal">Zaregistrovať sa</button>
             </p>
         </form>
     </div>

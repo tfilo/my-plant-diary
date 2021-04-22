@@ -34,10 +34,10 @@ Frontend
 
 #### Requirements for build (other versions may work too)
 
-- maven 3.6.3               https://maven.apache.org/download.cgi
-- AdoptOpenJDK 11 J9        https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9
-- postgres:13.1-alpine      https://hub.docker.com/_/postgres
-- djfarrelly/maildev:1.1.0  https://hub.docker.com/r/djfarrelly/maildev
+- maven 3.8.1               https://maven.apache.org/download.cgi
+- AdoptOpenJDK 16 J9        https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=openj9
+- postgres:13.2-alpine      https://hub.docker.com/_/postgres
+- maildev/maildev:1.1.0  https://hub.docker.com/r/djfarrelly/maildev
 
 #### Build
 

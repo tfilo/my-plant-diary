@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {AuthenticateService} from "../api/services/authenticate.service";
+import {UserService} from "../api/services/user.service";
+import {CreateUserSo} from "../api/models";
 
 @Component({
     selector: 'app-registration',
@@ -10,7 +13,7 @@ export class RegistrationComponent implements OnInit {
 
     registrationForm: FormGroup;
 
-    constructor() {
+    constructor(private us: UserService) {
         this.registrationForm = new FormGroup({
             username: new FormControl('', [Validators.minLength(5), Validators.maxLength(25), Validators.required]),
             email: new FormControl('', [Validators.minLength(5), Validators.maxLength(255), Validators.email, Validators.required]),
@@ -22,6 +25,25 @@ export class RegistrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
+    }
+
+    public submit(): void {
+        if (!this.registrationForm.valid) {
+            this.registrationForm.markAllAsTouched();
+            return;
+        }
+        const cuSO: CreateUserSo = {
+            email: this.registrationForm.get("email")?.value,
+            firstName: this.registrationForm.get("firstName")?.value,
+            lastName: this.registrationForm.get("lastName")?.value,
+            password: this.registrationForm.get("password")?.value,
+            username: this.registrationForm.get("username")?.value
+        }
+
+        this.us.register({body: cuSO}).subscribe(() => {
+            console.log('Registered');
+        });
     }
 
 }

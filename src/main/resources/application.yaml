@@ -27,9 +27,7 @@ spring:
       ddl-auto: validate # ddl-auto: create
   #flyway
   flyway:
-    check-location: true
-    locations: ${PD_FLYWAY_CHECK_LOCATIONS:classpath:/db/migration}
-
+    check-location: ${PD_FLYWAY_CHECK_LOCATION:true}
   #log
   logging:
     level:
