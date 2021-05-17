@@ -66,5 +66,7 @@ Frontend
 - http://localhost:8080/v3/api-docs.yaml
 - http://localhost:8080/swagger-ui.html
 
-#### Generate typescript services, need update api-docs.yaml first !
+#### Generate typescript services !
+Run in docker than:
+- `wget http://localhost:8080/v3/api-docs.yaml`
 - `mvn clean install -PgenerateServices`
