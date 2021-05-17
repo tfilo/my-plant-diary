@@ -30,7 +30,7 @@ Tests
 - Testcontainers
 
 Frontend
-- Angular (TODO)
+- Angular (TODO - work in progress)
 
 #### Requirements for build (other versions may work too)
 
@@ -41,7 +41,7 @@ Frontend
 
 #### Build
 
-- `mvn clean install`
+- `mvn clean install -PgenerateImage -PgenerateServices`
 
 #### Run - in development environment
 
@@ -66,4 +66,5 @@ Frontend
 - http://localhost:8080/v3/api-docs.yaml
 - http://localhost:8080/swagger-ui.html
 
-You can generate angular api using  https://www.npmjs.com/package/ng-openapi-gen
+#### Generate typescript services, need update api-docs.yaml first !
+- `mvn clean install -PgenerateServices`

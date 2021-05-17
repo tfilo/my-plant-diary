@@ -1,6 +1,11 @@
 <nav class="w3-sidebar w3-bar-block w3-animate-left w3-collapse w3-card-4" #sidebar>
-    <a routerLink="/login" routerLinkActive="active" class="w3-bar-item w3-button">Prihlásenie</a>
-    <a routerLink="/registration" routerLinkActive="active" class="w3-bar-item w3-button">Registrácia</a>
+    <ng-container *ngIf="!authenticated">
+        <a routerLink="/login" routerLinkActive="active" class="w3-bar-item w3-button" (click)="sidebarToggle()">Prihlásenie</a>
+        <a routerLink="/registration" routerLinkActive="active" class="w3-bar-item w3-button" (click)="sidebarToggle()">Registrácia</a>
+    </ng-container>
+    <ng-container *ngIf="authenticated">
+        <a routerLink="/dashboard" routerLinkActive="active" class="w3-bar-item w3-button" (click)="sidebarToggle()">Nástenka</a>
+    </ng-container>
 </nav>
 
 <div class="main-header w3-container w3-teal w3-card-4">

@@ -17,7 +17,8 @@ import sk.filo.plantdiary.jwt.AuthFilter;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class
+SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private AuthFilter authFilter;
 
@@ -44,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll() // allow everyone to authenticate
                 .antMatchers("/api/user/register").permitAll() // allow everyone to register
-                .antMatchers("/api/user/activate/{token}").permitAll() // allow everyone to activate account
+                .antMatchers("/api/user/activate").permitAll() // allow everyone to activate account
                 .antMatchers("/api/**").authenticated() // protect rest api
                 .anyRequest().permitAll() // allow everyone static content
                 .and()

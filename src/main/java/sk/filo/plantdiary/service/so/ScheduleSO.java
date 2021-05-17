@@ -1,5 +1,6 @@
 package sk.filo.plantdiary.service.so;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@Schema(name = "Schedule")
 @Getter
 @Setter
 @ToString

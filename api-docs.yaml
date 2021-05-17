@@ -1,0 +1,1251 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: plant
+  description: Plant endpoint
+- name: photo
+  description: Photo for plants endpoint
+- name: schedule
+  description: Schedule for plant care endpoint
+- name: authenticate
+  description: User authentication endpoint
+- name: user
+  description: User endpoint
+- name: event
+  description: Plant events endpoint
+- name: location
+  description: Plant locations endpoint
+paths:
+  /api/user:
+    get:
+      tags:
+      - user
+      operationId: getOwnUser
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+      - user
+      operationId: updateOwnUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+      - user
+      operationId: delete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /api/user/activate:
+    put:
+      tags:
+      - user
+      operationId: activate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateUser'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/schedule:
+    get:
+      tags:
+      - schedule
+      operationId: getAll
+      parameters:
+      - name: plantId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: true
+        schema:
+          maximum: 100
+          minimum: 5
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageSchedule'
+    put:
+      tags:
+      - schedule
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Schedule'
+    post:
+      tags:
+      - schedule
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSchedule'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Schedule'
+  /api/plant:
+    get:
+      tags:
+      - plant
+      operationId: getAll_1
+      parameters:
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: true
+        schema:
+          maximum: 100
+          minimum: 5
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PagePlant'
+    put:
+      tags:
+      - plant
+      operationId: update_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plant'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Plant'
+    post:
+      tags:
+      - plant
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlant'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Plant'
+  /api/photo:
+    put:
+      tags:
+      - photo
+      operationId: update_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePhoto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PhotoThumbnail'
+    post:
+      tags:
+      - photo
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - createPhotoSO
+              - photo
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+                createPhotoSO:
+                  $ref: '#/components/schemas/CreatePhoto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PhotoThumbnail'
+  /api/location:
+    get:
+      tags:
+      - location
+      operationId: getAll_2
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+    put:
+      tags:
+      - location
+      operationId: update_3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Location'
+    post:
+      tags:
+      - location
+      operationId: create_3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLocation'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Location'
+  /api/event:
+    put:
+      tags:
+      - event
+      operationId: update_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEvent'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Event'
+    post:
+      tags:
+      - event
+      operationId: create_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEvent'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Event'
+  /api/user/register:
+    post:
+      tags:
+      - user
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/authenticate:
+    post:
+      tags:
+      - authenticate
+      operationId: authenticateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Token'
+  /api/schedule/{id}:
+    get:
+      tags:
+      - schedule
+      operationId: getOne
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Schedule'
+    delete:
+      tags:
+      - schedule
+      operationId: delete_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /api/plant/{id}:
+    get:
+      tags:
+      - plant
+      operationId: getOne_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Plant'
+    delete:
+      tags:
+      - plant
+      operationId: delete_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /api/plant/type:
+    get:
+      tags:
+      - plant
+      operationId: getAllTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlantType'
+  /api/plant/by-location:
+    get:
+      tags:
+      - plant
+      operationId: getAllByLocation
+      parameters:
+      - name: locationId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: true
+        schema:
+          maximum: 100
+          minimum: 5
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PagePlant'
+  /api/photo/{id}:
+    get:
+      tags:
+      - photo
+      operationId: getOne_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Photo'
+    delete:
+      tags:
+      - photo
+      operationId: delete_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /api/photo/all/{plantId}:
+    get:
+      tags:
+      - photo
+      operationId: getAllByPlantId
+      parameters:
+      - name: plantId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: true
+        schema:
+          maximum: 100
+          minimum: 5
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PagePhotoThumbnail'
+  /api/location/{id}:
+    get:
+      tags:
+      - location
+      operationId: getOne_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Location'
+    delete:
+      tags:
+      - location
+      operationId: delete_4
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /api/event/{id}:
+    get:
+      tags:
+      - event
+      operationId: getOne_4
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Event'
+    delete:
+      tags:
+      - event
+      operationId: delete_5
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/event/type:
+    get:
+      tags:
+      - event
+      operationId: getAllTypes_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+  /api/event/all/{plantId}:
+    get:
+      tags:
+      - event
+      operationId: getAllByPlantId_1
+      parameters:
+      - name: plantId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: true
+        schema:
+          maximum: 100
+          minimum: 5
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageEvent'
+components:
+  schemas:
+    UpdateUser:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 5
+          type: string
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        oldPassword:
+          maxLength: 255
+          minLength: 8
+          type: string
+        password:
+          maxLength: 255
+          minLength: 8
+          type: string
+    User:
+      required:
+      - email
+      - username
+      type: object
+      properties:
+        username:
+          maxLength: 25
+          minLength: 5
+          type: string
+        email:
+          maxLength: 255
+          minLength: 5
+          type: string
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        password:
+          maxLength: 255
+          minLength: 8
+          type: string
+    ActivateUser:
+      required:
+      - token
+      - username
+      type: object
+      properties:
+        username:
+          maxLength: 25
+          minLength: 5
+          type: string
+        token:
+          type: string
+    EventType:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        schedulable:
+          type: boolean
+    PlantBasic:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+    Schedule:
+      required:
+      - autoUpdate
+      - id
+      - next
+      - plant
+      - type
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+        type:
+          $ref: '#/components/schemas/EventType'
+        repeatEvery:
+          maximum: 365
+          minimum: 1
+          type: integer
+          format: int32
+        autoUpdate:
+          type: boolean
+        next:
+          type: string
+          format: date
+    LocationBasic:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 80
+          minLength: 0
+          type: string
+    Plant:
+      required:
+      - deleted
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+        description:
+          maxLength: 1000
+          minLength: 0
+          type: string
+        type:
+          $ref: '#/components/schemas/PlantType'
+        location:
+          $ref: '#/components/schemas/LocationBasic'
+        deleted:
+          type: boolean
+    PlantType:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          maxLength: 80
+          minLength: 0
+          type: string
+    UpdatePhoto:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          maxLength: 200
+          minLength: 0
+          type: string
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+    PhotoThumbnail:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          maxLength: 200
+          minLength: 0
+          type: string
+        thumbnail:
+          type: array
+          items:
+            type: string
+            format: byte
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+    Location:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 80
+          minLength: 0
+          type: string
+    UpdateEvent:
+      required:
+      - dateTime
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/EventType'
+        dateTime:
+          type: string
+          format: date-time
+        description:
+          maxLength: 1000
+          minLength: 0
+          type: string
+    Event:
+      required:
+      - dateTime
+      - id
+      - plant
+      - type
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/EventType'
+        dateTime:
+          type: string
+          format: date-time
+        description:
+          maxLength: 1000
+          minLength: 0
+          type: string
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+    CreateUser:
+      required:
+      - email
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          maxLength: 25
+          minLength: 5
+          type: string
+        email:
+          maxLength: 255
+          minLength: 5
+          type: string
+        firstName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        password:
+          maxLength: 255
+          minLength: 8
+          type: string
+    CreateSchedule:
+      required:
+      - autoUpdate
+      - next
+      - plant
+      - type
+      type: object
+      properties:
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+        type:
+          $ref: '#/components/schemas/EventType'
+        repeatEvery:
+          maximum: 365
+          minimum: 1
+          type: integer
+          format: int32
+        autoUpdate:
+          type: boolean
+        next:
+          type: string
+          format: date
+    CreatePlant:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+        description:
+          maxLength: 1000
+          minLength: 0
+          type: string
+        type:
+          $ref: '#/components/schemas/PlantType'
+        location:
+          $ref: '#/components/schemas/LocationBasic'
+    CreatePhoto:
+      required:
+      - plant
+      type: object
+      properties:
+        description:
+          maxLength: 200
+          minLength: 0
+          type: string
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+    CreateLocation:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          maxLength: 80
+          minLength: 0
+          type: string
+    CreateEvent:
+      required:
+      - dateTime
+      - plant
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/EventType'
+        dateTime:
+          type: string
+          format: date-time
+        description:
+          maxLength: 1000
+          minLength: 0
+          type: string
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+    Auth:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          maxLength: 25
+          minLength: 0
+          type: string
+        password:
+          maxLength: 255
+          minLength: 0
+          type: string
+    Token:
+      type: object
+      properties:
+        type:
+          type: string
+        token:
+          type: string
+    PageSchedule:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        empty:
+          type: boolean
+    Pageable:
+      type: object
+      properties:
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/Sort'
+    Sort:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+        empty:
+          type: boolean
+    PagePlant:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Plant'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        empty:
+          type: boolean
+    Photo:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          maxLength: 200
+          minLength: 0
+          type: string
+        data:
+          type: array
+          items:
+            type: string
+            format: byte
+        plant:
+          $ref: '#/components/schemas/PlantBasic'
+    PagePhotoThumbnail:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhotoThumbnail'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        empty:
+          type: boolean
+    PageEvent:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        empty:
+          type: boolean

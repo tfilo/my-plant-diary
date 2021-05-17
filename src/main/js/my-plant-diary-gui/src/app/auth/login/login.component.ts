@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AuthService} from "../auth.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-login',
@@ -10,16 +12,22 @@ export class LoginComponent implements OnInit {
 
     loginForm: FormGroup;
 
-    constructor() {
+    constructor(
+        private authService: AuthService,
+        private router: Router
+    ) {
         this.loginForm = new FormGroup({
             username: new FormControl('', [Validators.maxLength(25), Validators.required]),
             password: new FormControl('', [Validators.maxLength(255), Validators.required])
         })
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+    }
 
     public login(): void {
-        console.log(this.loginForm.value);
+        this.authService.login(this.loginForm.value).subscribe(() => {
+                this.router.navigate(['/dashboard']);
+        });
     }
 }

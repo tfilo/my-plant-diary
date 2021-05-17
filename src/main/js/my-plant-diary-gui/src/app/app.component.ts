@@ -1,5 +1,6 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {faBars} from '@fortawesome/free-solid-svg-icons';
+import {AuthService} from "./auth/auth.service";
 
 @Component({
     selector: 'app-root',
@@ -16,11 +17,19 @@ export class AppComponent {
     @ViewChild('mainContent')
     mainContent: ElementRef | null = null;
 
+    constructor(private authService: AuthService) {
+    }
+
+    get authenticated(): boolean {
+        return this.authService.isAuthenticated();
+    }
+
     sidebarToggle() {
-        if (this.sidebar && this.mainContent) {
+        // w3.css has defined 992px for w3-collapse
+        if (window.innerWidth <= 992 && this.sidebar && this.mainContent) {
             if (this.sidebar.nativeElement.style.display !== 'block') {
                 this.sidebar.nativeElement.style.display = 'block';
-            }  else {
+            } else {
                 this.sidebar.nativeElement.style.display = 'none';
             }
         }

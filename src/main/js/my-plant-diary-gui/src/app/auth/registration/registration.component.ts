@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {AuthenticateService} from "../api/services/authenticate.service";
-import {UserService} from "../api/services/user.service";
-import {CreateUserSo} from "../api/models";
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Router} from "@angular/router";
+import {UserService} from "@api/api/user.service";
+import {CreateUser} from "@api/model/create-user";
 
 @Component({
     selector: 'app-registration',
@@ -13,7 +13,10 @@ export class RegistrationComponent implements OnInit {
 
     registrationForm: FormGroup;
 
-    constructor(private us: UserService) {
+    constructor(
+        private us: UserService,
+        private router: Router
+    ) {
         this.registrationForm = new FormGroup({
             username: new FormControl('', [Validators.minLength(5), Validators.maxLength(25), Validators.required]),
             email: new FormControl('', [Validators.minLength(5), Validators.maxLength(255), Validators.email, Validators.required]),
@@ -33,7 +36,7 @@ export class RegistrationComponent implements OnInit {
             this.registrationForm.markAllAsTouched();
             return;
         }
-        const cuSO: CreateUserSo = {
+        const cu: CreateUser = {
             email: this.registrationForm.get("email")?.value,
             firstName: this.registrationForm.get("firstName")?.value,
             lastName: this.registrationForm.get("lastName")?.value,
@@ -41,8 +44,8 @@ export class RegistrationComponent implements OnInit {
             username: this.registrationForm.get("username")?.value
         }
 
-        this.us.register({body: cuSO}).subscribe(() => {
-            console.log('Registered');
+        this.us.register(cu).subscribe(() => {
+            this.router.navigate(['/activate']);
         });
     }
 
