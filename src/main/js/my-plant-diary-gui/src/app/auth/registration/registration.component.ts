@@ -44,7 +44,7 @@ export class RegistrationComponent implements OnInit {
             username: this.registrationForm.get("username")?.value
         }
 
-        this.us.register(cu).subscribe(() => {
+        this.us.registerUser(cu).subscribe(() => {
             this.router.navigate(['/activate']);
         });
     }

@@ -43,14 +43,14 @@ SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/authenticate").permitAll() // allow everyone to authenticate
+                .antMatchers("/api/auth").permitAll() // allow everyone to authenticate
                 .antMatchers("/api/user/register").permitAll() // allow everyone to register
                 .antMatchers("/api/user/activate").permitAll() // allow everyone to activate account
                 .antMatchers("/api/**").authenticated() // protect rest api
                 .anyRequest().permitAll() // allow everyone static content
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
     }

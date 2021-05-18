@@ -13,7 +13,7 @@ services:
     ports:
       - "1080:80"
   app:
-    image: "tfilo/plantdiary:latest"
+    image: "tfilo/plantdiary:0.0.1"
     ports:
       - "8080:8080"
     environment:
@@ -22,6 +22,9 @@ services:
       PD_DATASOURCE_PASS: User123
       PD_MAIL_HOST: mail
       PD_MAIL_PORT: 25
+      PD_AUTH_EXPIRATION_TIME: 120000
+      PD_LOG_ORG_SPRINGFRAMEWORK_SECURITY: debug
+      PD_LOG_SK_FILO_PLANTDIARY: debug
     depends_on:
       - db
       - mail

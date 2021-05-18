@@ -31,7 +31,7 @@ export class ActivateComponent implements OnInit {
             return;
         }
 
-        this.us.activate(this.activationForm.value).subscribe(() => {
+        this.us.activateUser(this.activationForm.value).subscribe(() => {
             this.router.navigate(['/login']);
         });
     }

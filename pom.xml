@@ -16,6 +16,7 @@
 
     <properties>
         <revision>0.0.1</revision>
+        <spring.version>2.4.5</spring.version>
         <java.version>16</java.version>
         <angular.version>11.0.0</angular.version>
         <frontend-maven.version>1.11.3</frontend-maven.version>
@@ -29,7 +30,7 @@
         <org.testcontainers.postgresql.version>1.15.3</org.testcontainers.postgresql.version>
         <easy-random-core.version>5.0.0</easy-random-core.version>
         <versions-maven-plugin.version>2.8.1</versions-maven-plugin.version>
-        <dockerfile-maven.version>1.4.13</dockerfile-maven.version>
+        <io.fabric8.version>0.35.0</io.fabric8.version>
         <openapi-generator-maven-plugin.version>5.1.0</openapi-generator-maven-plugin.version>
     </properties>
 
@@ -237,8 +238,33 @@
                             <filesets>
                                 <fileset>
                                     <directory>${project.basedir}/src/main/js/my-plant-diary-gui/dist/</directory>
+                                    <directory>${project.basedir}/src/main/js/my-plant-diary-gui/openapi</directory>
                                 </fileset>
                             </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>my-plant-diary-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/api-docs.yaml</inputSpec>
+                            <generatorName>typescript-angular</generatorName>
+                            <output>${project.basedir}/src/main/js/my-plant-diary-gui/openapi</output>
+                            <typeMappings>set=Array</typeMappings>
+                            <configOptions>
+                                <ngVersion>${angular.version}</ngVersion>
+                                <fileNaming>kebab-case</fileNaming>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
@@ -316,87 +342,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${io.fabric8.version}</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>tfilo/${project.artifactId}:${revision}</name>
+                            <build>
+                                <contextDir>${project.basedir}</contextDir>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>generateServices</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                                <configuration>
-                                    <filesets>
-                                        <fileset>
-                                            <directory>${project.basedir}/src/main/js/my-plant-diary-gui/openapi</directory>
-                                        </fileset>
-                                    </filesets>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.openapitools</groupId>
-                        <artifactId>openapi-generator-maven-plugin</artifactId>
-                        <version>${openapi-generator-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>codelist</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                                <configuration>
-                                    <inputSpec>${project.basedir}/api-docs.yaml</inputSpec>
-                                    <generatorName>typescript-angular</generatorName>
-                                    <output>${project.basedir}/src/main/js/my-plant-diary-gui/openapi</output>
-                                    <typeMappings>set=Array</typeMappings>
-                                    <configOptions>
-                                        <ngVersion>${angular.version}</ngVersion>
-                                        <fileNaming>kebab-case</fileNaming>
-                                    </configOptions>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>generateImage</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.spotify</groupId>
-                        <artifactId>dockerfile-maven-plugin</artifactId>
-                        <version>${dockerfile-maven.version}</version>
-                        <configuration>
-                            <repository>tfilo/${project.artifactId}</repository>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>default</id>
-                                <goals>
-                                    <goal>build</goal>
-                                    <goal>push</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

@@ -1,5 +1,6 @@
 package sk.filo.plantdiary.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ import java.io.IOException;
 
 @Tag(name = "photo", description = "Photo for plants endpoint")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/photo")
 public class PhotoController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoController.class);
@@ -34,8 +35,8 @@ public class PhotoController {
         this.photoService = photoService;
     }
 
-    @PostMapping("/photo")
-    public ResponseEntity<PhotoThumbnailSO> create(
+    @PostMapping
+    public ResponseEntity<PhotoThumbnailSO> createPhoto(
             @RequestParam("photo") @NotNull MultipartFile photo,
             @RequestPart("createPhotoSO") @Valid @NotNull CreatePhotoSO createPhotoSO
     ) throws IOException {
@@ -51,20 +52,20 @@ public class PhotoController {
         return new ResponseEntity<>(photoService.create(photoSO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/photo")
-    public ResponseEntity<PhotoThumbnailSO> update(@Valid @NotNull @RequestBody UpdatePhotoSO updatePhotoSO) {
+    @PutMapping
+    public ResponseEntity<PhotoThumbnailSO> updatePhoto(@Valid @NotNull @RequestBody UpdatePhotoSO updatePhotoSO) {
         LOGGER.debug("update({})", updatePhotoSO);
         return new ResponseEntity<>(photoService.update(updatePhotoSO), HttpStatus.OK);
     }
 
-    @GetMapping("/photo/{id}")
-    public ResponseEntity<PhotoSO> getOne(@NotNull @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<PhotoSO> getOnePhoto(@NotNull @PathVariable Long id) {
         LOGGER.debug("getOne({})", id);
         return new ResponseEntity<>(photoService.getOne(id), HttpStatus.OK);
     }
 
-    @GetMapping("/photo/all/{plantId}")
-    public ResponseEntity<Page<PhotoThumbnailSO>> getAllByPlantId(
+    @GetMapping("/all/{plantId}")
+    public ResponseEntity<Page<PhotoThumbnailSO>> getAllPhotoThumbnailsByPlantId(
             @NotNull @PathVariable Long plantId,
             @NotNull @Min(0) @RequestParam Integer page,
             @NotNull @Min(5) @Max(100) @RequestParam Integer pageSize) {
@@ -72,8 +73,8 @@ public class PhotoController {
         return new ResponseEntity<>(photoService.getAllByPlantIdPaginated(plantId, page, pageSize), HttpStatus.OK);
     }
 
-    @DeleteMapping("/photo/{id}")
-    public ResponseEntity<Long> delete(@NotNull @PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deletePhoto(@NotNull @PathVariable Long id) {
         LOGGER.debug("delete({})", id);
         photoService.delete(id);
         return new ResponseEntity<>(id, HttpStatus.OK);

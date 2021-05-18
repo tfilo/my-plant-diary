@@ -1,5 +1,6 @@
 package sk.filo.plantdiary.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "location", description = "Plant locations endpoint")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/location")
 public class LocationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationController.class);
@@ -27,32 +28,32 @@ public class LocationController {
         this.locationService = locationService;
     }
 
-    @PostMapping("/location")
-    public ResponseEntity<LocationSO> create(@Valid @NotNull @RequestBody CreateLocationSO createLocationSO) {
+    @PostMapping
+    public ResponseEntity<LocationSO> createLocation(@Valid @NotNull @RequestBody CreateLocationSO createLocationSO) {
         LOGGER.debug("create({})", createLocationSO);
         return new ResponseEntity<>(locationService.create(createLocationSO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/location")
-    public ResponseEntity<LocationSO> update(@Valid @NotNull @RequestBody LocationSO locationSO) {
+    @PutMapping
+    public ResponseEntity<LocationSO> updateLocation(@Valid @NotNull @RequestBody LocationSO locationSO) {
         LOGGER.debug("update({})", locationSO);
         return new ResponseEntity<>(locationService.update(locationSO), HttpStatus.OK);
     }
 
-    @GetMapping("/location/{id}")
-    public ResponseEntity<LocationSO> getOne(@NotNull @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<LocationSO> getOneLocation(@NotNull @PathVariable Long id) {
         LOGGER.debug("getOne({})", id);
         return new ResponseEntity<>(locationService.getOne(id), HttpStatus.OK);
     }
 
-    @GetMapping("/location")
-    public ResponseEntity<List<LocationSO>> getAll() {
+    @GetMapping
+    public ResponseEntity<List<LocationSO>> getAllLocations() {
         LOGGER.debug("getAll()");
         return new ResponseEntity<>(locationService.getAll(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/location/{id}")
-    public ResponseEntity<Long> delete(@NotNull @PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteLocation(@NotNull @PathVariable Long id) {
         LOGGER.debug("delete({})", id);
         locationService.delete(id);
         return new ResponseEntity<>(id, HttpStatus.OK);

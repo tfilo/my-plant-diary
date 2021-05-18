@@ -63,7 +63,7 @@ public class PhotoService {
 
         Plant plant = plantRepository.findById(photoSO.getPlant().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.PLANT_NOT_FOUND.name()));
-
+        LOGGER.debug("create plant {}, {}", plant, AuthHelper.getUsername());
         if (plant.getOwner().getUsername().equals(AuthHelper.getUsername())) {
             Photo photo = photoMapper.toBO(photoSO);
             photo.setPlant(plant);
@@ -78,6 +78,7 @@ public class PhotoService {
 
             return photoMapper.toThumbnailSO(photoRepository.save(photo));
         } else {
+            LOGGER.debug("create plant exception");
             // when plant owned by different user, throw not found exception
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ExceptionCode.PLANT_NOT_FOUND.name());
         }

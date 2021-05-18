@@ -21,7 +21,7 @@ public class ConfigProperties {
     private String jwtPublicKey;
 
     @NotNull
-    private Integer jwtExpirationTime;
+    private Long jwtExpirationTime;
 
     @NotNull
     private String serverEmail;

@@ -7,7 +7,14 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './auth/login/login.component';
 import {RegistrationComponent} from './auth/registration/registration.component';
-import {HttpClientModule, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {
+    HTTP_INTERCEPTORS,
+    HttpClientModule,
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
+} from "@angular/common/http";
 
 import { environment } from '../environments/environment';
 import { ActivateComponent } from './auth/registration/activate/activate.component';
@@ -54,7 +61,8 @@ export class TokenInterceptor implements HttpInterceptor {
         ApiModule
     ],
     providers: [
-        { provide: BASE_PATH, useValue: environment.baseUrl}
+        { provide: BASE_PATH, useValue: environment.baseUrl },
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
     ],
     bootstrap: [AppComponent]
 })

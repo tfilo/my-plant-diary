@@ -1,5 +1,6 @@
 package sk.filo.plantdiary.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +15,11 @@ import sk.filo.plantdiary.service.so.AuthSO;
 import sk.filo.plantdiary.service.so.TokenSO;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Tag(name = "authenticate", description = "User authentication endpoint")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
@@ -28,9 +30,15 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping
     public ResponseEntity<TokenSO> authenticateUser(@Valid @RequestBody AuthSO authSO) {
         LOGGER.debug("authenticateUser({})", authSO);
         return new ResponseEntity<>(authService.authenticateUser(authSO), HttpStatus.OK);
+    }
+
+    @PostMapping("/renew")
+    public ResponseEntity<TokenSO> renewToken() {
+        LOGGER.debug("renewToken()");
+        return new ResponseEntity<>(authService.renewToken(), HttpStatus.OK);
     }
 }

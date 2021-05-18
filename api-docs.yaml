@@ -53,7 +53,7 @@ paths:
     delete:
       tags:
       - user
-      operationId: delete
+      operationId: deleteUser
       requestBody:
         content:
           application/json:
@@ -72,7 +72,7 @@ paths:
     put:
       tags:
       - user
-      operationId: activate
+      operationId: activateUser
       requestBody:
         content:
           application/json:
@@ -86,7 +86,7 @@ paths:
     get:
       tags:
       - schedule
-      operationId: getAll
+      operationId: getAllSchedules
       parameters:
       - name: plantId
         in: query
@@ -119,7 +119,7 @@ paths:
     put:
       tags:
       - schedule
-      operationId: update
+      operationId: updateSchedule
       requestBody:
         content:
           application/json:
@@ -136,7 +136,7 @@ paths:
     post:
       tags:
       - schedule
-      operationId: create
+      operationId: createSchedule
       requestBody:
         content:
           application/json:
@@ -154,7 +154,7 @@ paths:
     get:
       tags:
       - plant
-      operationId: getAll_1
+      operationId: getAllPlants
       parameters:
       - name: deleted
         in: query
@@ -186,7 +186,7 @@ paths:
     put:
       tags:
       - plant
-      operationId: update_1
+      operationId: updatePlant
       requestBody:
         content:
           application/json:
@@ -203,7 +203,7 @@ paths:
     post:
       tags:
       - plant
-      operationId: create_1
+      operationId: createPlant
       requestBody:
         content:
           application/json:
@@ -221,7 +221,7 @@ paths:
     put:
       tags:
       - photo
-      operationId: update_2
+      operationId: updatePhoto
       requestBody:
         content:
           application/json:
@@ -238,7 +238,7 @@ paths:
     post:
       tags:
       - photo
-      operationId: create_2
+      operationId: createPhoto
       requestBody:
         content:
           application/json:
@@ -265,7 +265,7 @@ paths:
     get:
       tags:
       - location
-      operationId: getAll_2
+      operationId: getAllLocations
       responses:
         "200":
           description: OK
@@ -278,7 +278,7 @@ paths:
     put:
       tags:
       - location
-      operationId: update_3
+      operationId: updateLocation
       requestBody:
         content:
           application/json:
@@ -295,7 +295,7 @@ paths:
     post:
       tags:
       - location
-      operationId: create_3
+      operationId: createLocation
       requestBody:
         content:
           application/json:
@@ -313,7 +313,7 @@ paths:
     put:
       tags:
       - event
-      operationId: update_4
+      operationId: updateEvent
       requestBody:
         content:
           application/json:
@@ -330,7 +330,7 @@ paths:
     post:
       tags:
       - event
-      operationId: create_4
+      operationId: createEvent
       requestBody:
         content:
           application/json:
@@ -348,7 +348,7 @@ paths:
     post:
       tags:
       - user
-      operationId: register
+      operationId: registerUser
       requestBody:
         content:
           application/json:
@@ -358,7 +358,7 @@ paths:
       responses:
         "200":
           description: OK
-  /api/authenticate:
+  /api/auth:
     post:
       tags:
       - authenticate
@@ -376,11 +376,23 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Token'
+  /api/auth/renew:
+    post:
+      tags:
+      - authenticate
+      operationId: renewToken
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Token'
   /api/schedule/{id}:
     get:
       tags:
       - schedule
-      operationId: getOne
+      operationId: getOneSchedule
       parameters:
       - name: id
         in: path
@@ -398,7 +410,7 @@ paths:
     delete:
       tags:
       - schedule
-      operationId: delete_1
+      operationId: deleteSchedule
       parameters:
       - name: id
         in: path
@@ -418,7 +430,7 @@ paths:
     get:
       tags:
       - plant
-      operationId: getOne_1
+      operationId: getOnePlant
       parameters:
       - name: id
         in: path
@@ -436,7 +448,7 @@ paths:
     delete:
       tags:
       - plant
-      operationId: delete_2
+      operationId: delete
       parameters:
       - name: id
         in: path
@@ -456,7 +468,7 @@ paths:
     get:
       tags:
       - plant
-      operationId: getAllTypes
+      operationId: getAllPlantTypes
       responses:
         "200":
           description: OK
@@ -470,7 +482,7 @@ paths:
     get:
       tags:
       - plant
-      operationId: getAllByLocation
+      operationId: getAllPlantsByLocation
       parameters:
       - name: locationId
         in: query
@@ -509,7 +521,7 @@ paths:
     get:
       tags:
       - photo
-      operationId: getOne_2
+      operationId: getOnePhoto
       parameters:
       - name: id
         in: path
@@ -527,7 +539,7 @@ paths:
     delete:
       tags:
       - photo
-      operationId: delete_3
+      operationId: deletePhoto
       parameters:
       - name: id
         in: path
@@ -547,7 +559,7 @@ paths:
     get:
       tags:
       - photo
-      operationId: getAllByPlantId
+      operationId: getAllPhotoThumbnailsByPlantId
       parameters:
       - name: plantId
         in: path
@@ -581,7 +593,7 @@ paths:
     get:
       tags:
       - location
-      operationId: getOne_3
+      operationId: getOneLocation
       parameters:
       - name: id
         in: path
@@ -599,7 +611,7 @@ paths:
     delete:
       tags:
       - location
-      operationId: delete_4
+      operationId: deleteLocation
       parameters:
       - name: id
         in: path
@@ -619,7 +631,7 @@ paths:
     get:
       tags:
       - event
-      operationId: getOne_4
+      operationId: getOneEvent
       parameters:
       - name: id
         in: path
@@ -637,7 +649,7 @@ paths:
     delete:
       tags:
       - event
-      operationId: delete_5
+      operationId: deleteEvent
       parameters:
       - name: id
         in: path
@@ -656,7 +668,7 @@ paths:
     get:
       tags:
       - event
-      operationId: getAllTypes_1
+      operationId: getAllEventTypes
       responses:
         "200":
           description: OK
@@ -670,7 +682,7 @@ paths:
     get:
       tags:
       - event
-      operationId: getAllByPlantId_1
+      operationId: getAllEventsByPlantId
       parameters:
       - name: plantId
         in: path

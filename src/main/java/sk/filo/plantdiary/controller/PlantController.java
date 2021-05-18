@@ -1,5 +1,6 @@
 package sk.filo.plantdiary.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 @Tag(name = "plant", description = "Plant endpoint")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/plant")
 public class PlantController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlantController.class);
@@ -32,26 +33,26 @@ public class PlantController {
         this.plantService = plantService;
     }
 
-    @PostMapping("/plant")
-    public ResponseEntity<PlantSO> create(@Valid @NotNull @RequestBody CreatePlantSO createPlantSO) {
+    @PostMapping
+    public ResponseEntity<PlantSO> createPlant(@Valid @NotNull @RequestBody CreatePlantSO createPlantSO) {
         LOGGER.debug("create({})", createPlantSO);
         return new ResponseEntity<>(plantService.create(createPlantSO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/plant")
-    public ResponseEntity<PlantSO> update(@Valid @NotNull @RequestBody PlantSO plantSO) {
+    @PutMapping
+    public ResponseEntity<PlantSO> updatePlant(@Valid @NotNull @RequestBody PlantSO plantSO) {
         LOGGER.debug("update({})", plantSO);
         return new ResponseEntity<>(plantService.update(plantSO), HttpStatus.OK);
     }
 
-    @GetMapping("/plant/{id}")
-    public ResponseEntity<PlantSO> getOne(@NotNull @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<PlantSO> getOnePlant(@NotNull @PathVariable Long id) {
         LOGGER.debug("getOne({})", id);
         return new ResponseEntity<>(plantService.getOne(id), HttpStatus.OK);
     }
 
-    @GetMapping("/plant")
-    public ResponseEntity<Page<PlantSO>> getAll(
+    @GetMapping
+    public ResponseEntity<Page<PlantSO>> getAllPlants(
             @RequestParam Optional<Boolean> deleted,
             @NotNull @Min(0) @RequestParam Integer page,
             @NotNull @Min(5) @Max(100) @RequestParam Integer pageSize) {
@@ -59,8 +60,8 @@ public class PlantController {
         return new ResponseEntity<>(plantService.getAllPaginated(deleted, page, pageSize), HttpStatus.OK);
     }
 
-    @GetMapping("/plant/by-location")
-    public ResponseEntity<Page<PlantSO>> getAllByLocation(
+    @GetMapping("/by-location")
+    public ResponseEntity<Page<PlantSO>> getAllPlantsByLocation(
             @RequestParam Optional<Long> locationId,
             @RequestParam Optional<Boolean> deleted,
             @NotNull @Min(0) @RequestParam Integer page,
@@ -69,15 +70,15 @@ public class PlantController {
         return new ResponseEntity<>(plantService.getAllPaginatedByLocation(locationId, deleted, page, pageSize), HttpStatus.OK);
     }
 
-    @DeleteMapping("/plant/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@NotNull @PathVariable Long id) {
         LOGGER.debug("delete({})", id);
         plantService.delete(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @GetMapping("/plant/type")
-    public ResponseEntity<List<PlantTypeSO>> getAllTypes() {
+    @GetMapping("/type")
+    public ResponseEntity<List<PlantTypeSO>> getAllPlantTypes() {
         LOGGER.debug("getAllTypes()");
         return new ResponseEntity<>(plantService.getAllTypes(), HttpStatus.OK);
     }

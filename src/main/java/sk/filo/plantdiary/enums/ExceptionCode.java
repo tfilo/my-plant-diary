@@ -3,6 +3,7 @@ package sk.filo.plantdiary.enums;
 public enum ExceptionCode {
     INVALID_CREDENTIALS,
     DISABLED_USER,
+    SESSION_EXPIRED,
     PLANT_NOT_FOUND,
     EVENT_NOT_FOUND,
     EVENT_TYPE_NOT_FOUND,

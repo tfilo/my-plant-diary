@@ -1,5 +1,6 @@
 package sk.filo.plantdiary.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @Tag(name = "schedule", description = "Schedule for plant care endpoint")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/schedule")
 public class ScheduleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleController.class);
@@ -30,26 +31,26 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @PostMapping("/schedule")
-    public ResponseEntity<ScheduleSO> create(@Valid @NotNull @RequestBody CreateScheduleSO createScheduleSO) {
+    @PostMapping
+    public ResponseEntity<ScheduleSO> createSchedule(@Valid @NotNull @RequestBody CreateScheduleSO createScheduleSO) {
         LOGGER.debug("create({})", createScheduleSO);
         return new ResponseEntity<>(scheduleService.create(createScheduleSO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/schedule")
-    public ResponseEntity<ScheduleSO> update(@Valid @NotNull @RequestBody ScheduleSO scheduleSO) {
+    @PutMapping
+    public ResponseEntity<ScheduleSO> updateSchedule(@Valid @NotNull @RequestBody ScheduleSO scheduleSO) {
         LOGGER.debug("update({})", scheduleSO);
         return new ResponseEntity<>(scheduleService.update(scheduleSO), HttpStatus.OK);
     }
 
-    @GetMapping("/schedule/{id}")
-    public ResponseEntity<ScheduleSO> getOne(@NotNull @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleSO> getOneSchedule(@NotNull @PathVariable Long id) {
         LOGGER.debug("getOne({})", id);
         return new ResponseEntity<>(scheduleService.getOne(id), HttpStatus.OK);
     }
 
-    @GetMapping("/schedule")
-    public ResponseEntity<Page<ScheduleSO>> getAll(
+    @GetMapping
+    public ResponseEntity<Page<ScheduleSO>> getAllSchedules(
             @RequestParam Optional<Long> plantId,
             @NotNull @Min(0) @RequestParam Integer page,
             @NotNull @Min(5) @Max(100) @RequestParam Integer pageSize) {
@@ -57,8 +58,8 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.getAllPaginated(plantId, page, pageSize), HttpStatus.OK);
     }
 
-    @DeleteMapping("/schedule/{id}")
-    public ResponseEntity<Long> delete(@NotNull @PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteSchedule(@NotNull @PathVariable Long id) {
         LOGGER.debug("delete({})", id);
         scheduleService.delete(id);
         return new ResponseEntity<>(id, HttpStatus.OK);

@@ -39,7 +39,7 @@ import static io.github.benas.randombeans.FieldPredicates.named;
 @DirtiesContext
 public abstract class BaseIntegrationTest {
 
-    public static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:13.1-alpine");
+    public static PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.1-alpine"));
     public static GenericContainer maildev = new GenericContainer(DockerImageName.parse("djfarrelly/maildev")).withExposedPorts(25);
 
     protected static EasyRandom easyRandom;
@@ -51,8 +51,6 @@ public abstract class BaseIntegrationTest {
     public WebApplicationContext webApplicationContext;
     @Autowired
     public ObjectMapper objectMapper;
-
-
 
     @BeforeAll
     public static void startContainers() {

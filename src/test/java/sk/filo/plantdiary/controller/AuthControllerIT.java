@@ -28,15 +28,13 @@ public class AuthControllerIT extends BaseIntegrationTest {
         so.setUsername("username");
         so.setPassword("User123");
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(so)))
                 .andExpect(status().isOk())
                 .andReturn();
 
         TokenSO tokenSO = mapFromJson(mvcResult.getResponse().getContentAsString(), TokenSO.class);
-
-        System.out.println(tokenSO.toString());
 
         assertThat(tokenSO.getType()).isEqualTo("Bearer");
         JwtToken.JwtUser tokenUser = jwtToken.parseToken(tokenSO.getToken());
@@ -46,7 +44,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
         // TEST correct user, incorrect password
         so.setUsername("username");
         so.setPassword("user123");
-        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(so)))
                 .andExpect(status().isBadRequest())
@@ -55,7 +53,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
         // TEST incorrect user, correct password
         so.setUsername("username1");
         so.setPassword("User123");
-        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(so)))
                 .andExpect(status().isBadRequest())
@@ -64,7 +62,7 @@ public class AuthControllerIT extends BaseIntegrationTest {
         // TEST incorrect user, incorrect password
         so.setUsername("username1");
         so.setPassword("User223");
-        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(so)))
                 .andExpect(status().isBadRequest())
@@ -73,10 +71,23 @@ public class AuthControllerIT extends BaseIntegrationTest {
         // TEST disabled user
         so.setUsername("username2");
         so.setPassword("User123");
-        mvc.perform(MockMvcRequestBuilders.post("/api/authenticate")
+        mvc.perform(MockMvcRequestBuilders.post("/api/auth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(so)))
                 .andExpect(status().isForbidden())
                 .andExpect(status().reason(ExceptionCode.DISABLED_USER.name()));
+
+        setAuthentication("username");
+
+        mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/auth/renew"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        tokenSO = mapFromJson(mvcResult.getResponse().getContentAsString(), TokenSO.class);
+
+        assertThat(tokenSO.getType()).isEqualTo("Bearer");
+        tokenUser = jwtToken.parseToken(tokenSO.getToken());
+        assertThat(tokenUser.getUsername()).isEqualTo("username");
+        assertThat(tokenUser.getEnabled()).isTrue();
     }
 }

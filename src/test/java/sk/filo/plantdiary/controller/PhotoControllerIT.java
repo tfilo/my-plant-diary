@@ -56,8 +56,7 @@ public class PhotoControllerIT extends BaseIntegrationTest {
 
         // test upload photo on existing plant
         createPhotoSO.getPlant().setId(1L);
-        jsonCreatePhotoSO
-                = new MockMultipartFile(
+        jsonCreatePhotoSO = new MockMultipartFile(
                 "createPhotoSO",
                 "",
                 MediaType.APPLICATION_JSON_VALUE,

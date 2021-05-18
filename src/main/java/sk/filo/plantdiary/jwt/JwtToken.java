@@ -28,7 +28,7 @@ import java.util.Date;
 public class JwtToken {
 
     private final Algorithm algorithm;
-    private final Integer expiration;
+    private final Long expiration;
     public JwtToken(ConfigProperties configProperties) {
         this.algorithm = Algorithm.RSA256(
                 getPublicKey(configProperties.getJwtPublicKey()), getPrivateKey(configProperties.getJwtPrivateKey())

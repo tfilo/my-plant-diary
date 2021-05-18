@@ -41,7 +41,7 @@ Frontend
 
 #### Build
 
-- `mvn clean install -PgenerateImage -PgenerateServices`
+- `mvn clean install`
 
 #### Run - in development environment
 
@@ -66,7 +66,13 @@ Frontend
 - http://localhost:8080/v3/api-docs.yaml
 - http://localhost:8080/swagger-ui.html
 
-#### Generate typescript services !
-Run in docker than:
-- `wget http://localhost:8080/v3/api-docs.yaml`
-- `mvn clean install -PgenerateServices`
+#### How to update angular generated services
+
+To generate up to date OpenApi angular services, you must first run app and download api-docs.yaml file.
+
+- `cd my-plant-diary`
+- `docker-compose up -d`
+- `wget -q -O ../api-docs.yaml http://localhost:8080/v3/api-docs.yaml`
+- `docker-compose down`
+- `cd ../`
+- `mvn clean install`
