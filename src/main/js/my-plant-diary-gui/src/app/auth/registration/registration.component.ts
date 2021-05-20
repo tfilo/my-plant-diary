@@ -6,8 +6,7 @@ import {CreateUser} from "@api/model/create-user";
 
 @Component({
     selector: 'app-registration',
-    templateUrl: './registration.component.html',
-    styleUrls: ['./registration.component.scss']
+    templateUrl: './registration.component.html'
 })
 export class RegistrationComponent implements OnInit {
 

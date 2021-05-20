@@ -16,23 +16,38 @@ import {
     HttpRequest
 } from "@angular/common/http";
 
-import { environment } from '../environments/environment';
-import { ActivateComponent } from './auth/registration/activate/activate.component';
+import {environment} from '../environments/environment';
+import {ActivateComponent} from './auth/registration/activate/activate.component';
 import {ApiModule} from "@api/api.module";
 import {BASE_PATH} from "@api/variables";
-import { DashboardComponent } from './dashboard/dashboard.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
 import {AuthService} from "./auth/auth.service";
 import {Observable} from "rxjs";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {LocationComponent} from './location/location.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { UserComponent } from './user/user.component';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-    constructor(private authService: AuthService, @Inject(BASE_PATH) private basePath: string) {
+    constructor(@Inject(BASE_PATH) private basePath: string) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (req.url.startsWith(this.basePath)) {
-            const token = this.authService.getToken();
+            const token = localStorage.getItem('token');
             if (token) {
                 req = req.clone({
                     headers: req.headers.set('Authorization', 'Bearer ' + token)
@@ -43,14 +58,15 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 }
 
-
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
         RegistrationComponent,
         ActivateComponent,
-        DashboardComponent
+        DashboardComponent,
+        LocationComponent,
+        UserComponent
     ],
     imports: [
         BrowserModule,
@@ -58,11 +74,24 @@ export class TokenInterceptor implements HttpInterceptor {
         AppRoutingModule,
         ReactiveFormsModule,
         FontAwesomeModule,
-        ApiModule
+        ApiModule,
+        BrowserAnimationsModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatListModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FlexLayoutModule,
+        MatTabsModule,
+        MatMenuModule,
+        MatTooltipModule
     ],
     providers: [
-        { provide: BASE_PATH, useValue: environment.baseUrl },
-        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+        {provide: BASE_PATH, useValue: environment.baseUrl},
+        {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
     ],
     bootstrap: [AppComponent]
 })

@@ -1,1 +1,77 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@include mat-core();
+
+$my-plant-diary-gui-primary: mat-palette($mat-green);
+$my-plant-diary-gui-accent: mat-palette($mat-deep-orange, A200, A100, A400);
+$my-plant-diary-gui-warn: mat-palette($mat-red);
+$my-plant-diary-gui-theme: mat-light-theme($my-plant-diary-gui-primary,$my-plant-diary-gui-accent,$my-plant-diary-gui-warn);
+
+@include angular-material-theme($my-plant-diary-gui-theme);
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.pd-full-width {
+    width: 100%;
+}
+
+.pd-card {
+    position: relative;
+    top: 0;
+    opacity: 1;
+    float: left;
+    margin: 24px;
+    padding: 60px 50px 40px 50px;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    z-index: 5;
+    max-width: 330px;
+}
+
+.pd-card-form {
+    min-width: 100%;
+    max-width: 300px;
+    width: 100%;
+}
+
+.pd-btn-block {
+    width: 100%;
+}
+
+.pd-main-wrapper mat-card-header {
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: 700;
+}
+
+.pd-main-wrapper mat-card-header mat-card-title {
+    font-size: 30px;
+    margin: 0;
+}
+
+.pd-main-wrapper .mat-card {
+    padding: 45px 70px 55px;
+}
+
+.pd-main-wrapper .mat-stroked-button {
+    border: 1px solid currentColor;
+    line-height: 54px;
+}
+
+.pd-spacer {
+    flex: 1 1 auto;
+}
+
+.pd-mt1 {
+    margin-top: 4px !important;
+}

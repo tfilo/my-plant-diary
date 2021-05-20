@@ -1,24 +1,43 @@
-<div class="w3-row">
-    <div class="w3-col l2 w3-hide-small w3-hide-medium">
-        &nbsp;
-        <!-- PLACEHOLDER -->
-    </div>
-    <div class="w3-card-4 w3-col l8 m12 s12">
-        <div class="w3-container w3-teal">
-            <h2>Aktivácia účtu</h2>
-        </div>
-        <form class="w3-container" [formGroup]="activationForm" (submit)="submit()">
-            <p>
-                <label>Používateľské meno</label>
-                <input class="w3-input" type="text" formControlName="username">
-            </p>
-            <p>
-                <label>Aktivačný kľúč</label>
-                <input class="w3-input" type="text" formControlName="token">
-            </p>
-            <p>
-                <button type="submit" class="w3-btn w3-teal">Odoslať</button>
-            </p>
+<div class="pd-main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card class="pd-card">
+
+        <mat-card-header>
+            <mat-card-title>Aktivácia účtu</mat-card-title>
+            <mat-card-subtitle *ngIf="username">Je potrebné aktivovať účet.</mat-card-subtitle>
+        </mat-card-header>
+
+        <form [formGroup]="activationForm" (submit)="submit()" class="pd-card-form">
+            <mat-card-content>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Používateľské meno</mat-label>
+                    <input matInput formControlName="username">
+                    <mat-error *ngIf="activationForm.controls['username'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="activationForm.controls['username'].hasError('minlength')">
+                        Minimálne 5 znakov
+                    </mat-error>
+                    <mat-error *ngIf="activationForm.controls['username'].hasError('maxlength')">
+                        Maximálne 25 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Aktivačný kľúč</mat-label>
+                    <input matInput formControlName="token">
+                    <mat-hint>Aktivačný kľúč nájdete v emaile.</mat-hint>
+                    <mat-error *ngIf="activationForm.controls['token'].hasError('pattern')">
+                        Nesprávny formát
+                    </mat-error>
+                    <mat-error *ngIf="activationForm.controls['token'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                </mat-form-field>
+                <button mat-stroked-button color="primary" class="pd-btn-block pd-mt1" type="submit">Aktivovať</button>
+                <button mat-stroked-button color="accent" class="pd-btn-block pd-mt1" type="button" routerLink="/login">Späť na prihlásenie</button>
+            </mat-card-content>
         </form>
-    </div>
+
+    </mat-card>
+
 </div>

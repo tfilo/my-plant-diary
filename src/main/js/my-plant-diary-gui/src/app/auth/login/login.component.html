@@ -1,24 +1,38 @@
-<div class="w3-row">
-    <div class="w3-col l2 w3-hide-small w3-hide-medium">
-        &nbsp;
-        <!-- PLACEHOLDER -->
-    </div>
-    <div class="w3-card-4 w3-col l8 m12 s12">
-        <div class="w3-container w3-teal">
-            <h2>Prihlasovacia obrazovka</h2>
-        </div>
-        <form class="w3-container" [formGroup]="loginForm" (submit)="login()">
-            <p>
-                <label>Používateľské meno</label>
-                <input class="w3-input" type="text" formControlName="username">
-            </p>
-            <p>
-                <label>Heslo</label>
-                <input class="w3-input" type="password" formControlName="password">
-            </p>
-            <p>
-                <button class="w3-btn w3-teal" type="submit">Prihlásiť sa</button>
-            </p>
+<div class="pd-main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card class="pd-card mat-elevation-z5">
+
+        <mat-card-header>
+            <mat-card-title>Prihlásenie</mat-card-title>
+        </mat-card-header>
+
+        <form [formGroup]="loginForm" (submit)="login()" class="pd-card-form">
+            <mat-card-content>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Používateľské meno</mat-label>
+                    <input matInput formControlName="username">
+                    <mat-error *ngIf="loginForm.controls['username'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="loginForm.controls['username'].hasError('maxlength')">
+                        Maximálne 25 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Heslo</mat-label>
+                    <input matInput type="password" formControlName="password">
+                    <mat-error *ngIf="loginForm.controls['password'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="loginForm.controls['password'].hasError('maxlength')">
+                        Maximálne 255 znakov
+                    </mat-error>
+                </mat-form-field>
+            </mat-card-content>
+            <button mat-stroked-button color="primary" class="pd-btn-block" type="submit">Prihlásiť sa</button>
+            <button mat-stroked-button color="accent" class="pd-btn-block pd-mt1" type="button" routerLink="/registration">Registrácia</button>
         </form>
-    </div>
+
+    </mat-card>
+
 </div>

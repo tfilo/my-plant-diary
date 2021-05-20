@@ -1,40 +1,87 @@
-<div class="w3-row">
-    <div class="w3-col l2 w3-hide-small w3-hide-medium">
-        &nbsp;
-        <!-- PLACEHOLDER -->
-    </div>
-    <div class="w3-card-4 w3-col l8 m12 s12">
-        <div class="w3-container w3-teal">
-            <h2>Registrácia</h2>
-        </div>
-        <form class="w3-container" [formGroup]="registrationForm" (submit)="submit()">
-            <p>
-                <label>Používateľské meno</label>
-                <input class="w3-input" type="text" formControlName="username">
-            </p>
-            <p>
-                <label>Email</label>
-                <input class="w3-input" type="text" formControlName="email">
-            </p>
-            <p>
-                <label>Meno</label>
-                <input class="w3-input" type="text" formControlName="firstName">
-            </p>
-            <p>
-                <label>Priezvisko</label>
-                <input class="w3-input" type="text" formControlName="lastName">
-            </p>
-            <p>
-                <label>Heslo</label>
-                <input class="w3-input" type="password" formControlName="password">
-            </p>
-            <p>
-                <label>Zopakovať heslo</label>
-                <input class="w3-input" type="password" formControlName="password2">
-            </p>
-            <p>
-                <button type="submit" class="w3-btn w3-teal">Zaregistrovať sa</button>
-            </p>
+<div class="pd-main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card class="pd-card">
+
+        <mat-card-header>
+            <mat-card-title>Registrácia</mat-card-title>
+        </mat-card-header>
+
+        <form [formGroup]="registrationForm" (submit)="submit()" class="pd-card-form">
+            <mat-card-content>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Používateľské meno</mat-label>
+                    <input matInput formControlName="username">
+                    <mat-error *ngIf="registrationForm.controls['username'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['username'].hasError('minlength')">
+                        Minimálne 5 znakov
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['username'].hasError('maxlength')">
+                        Maximálne 25 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email">
+                    <mat-error *ngIf="registrationForm.controls['email'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['email'].hasError('email')">
+                        Neplatný email
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['email'].hasError('minlength')">
+                        Minimálne 5 znakov
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['email'].hasError('maxlength')">
+                        Maximálne 255 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Meno</mat-label>
+                    <input matInput formControlName="firstName">
+                    <mat-error *ngIf="registrationForm.controls['firstName'].hasError('maxlength')">
+                        Maximálne 50 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Priezvisko</mat-label>
+                    <input matInput formControlName="lastName">
+                    <mat-error *ngIf="registrationForm.controls['lastName'].hasError('maxlength')">
+                        Maximálne 50 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Heslo</mat-label>
+                    <input matInput type="password" formControlName="password">
+                    <mat-error *ngIf="registrationForm.controls['password'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['password'].hasError('minlength')">
+                        Minimálne 8 znakov
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['password'].hasError('maxlength')">
+                        Maximálne 255 znakov
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="pd-full-width">
+                    <mat-label>Zopakovať heslo</mat-label>
+                    <input matInput type="password" formControlName="password2">
+                    <mat-error *ngIf="registrationForm.controls['password'].hasError('required')">
+                        Povinná položka
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['password2'].hasError('minlength')">
+                        Minimálne 8 znakov
+                    </mat-error>
+                    <mat-error *ngIf="registrationForm.controls['password2'].hasError('maxlength')">
+                        Maximálne 255 znakov
+                    </mat-error>
+                </mat-form-field>
+                <button mat-stroked-button color="primary" class="pd-btn-block" type="submit">Zaregistrovať sa</button>
+                <button mat-stroked-button color="accent" class="pd-btn-block pd-mt1" type="button" routerLink="/login">Späť na prihlásenie</button>
+            </mat-card-content>
         </form>
-    </div>
+
+    </mat-card>
+
 </div>

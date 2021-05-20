@@ -1,24 +1,17 @@
-<nav class="w3-sidebar w3-bar-block w3-animate-left w3-collapse w3-card-4" #sidebar>
-    <ng-container *ngIf="!authenticated">
-        <a routerLink="/login" routerLinkActive="active" class="w3-bar-item w3-button" (click)="sidebarToggle()">Prihlásenie</a>
-        <a routerLink="/registration" routerLinkActive="active" class="w3-bar-item w3-button" (click)="sidebarToggle()">Registrácia</a>
-    </ng-container>
-    <ng-container *ngIf="authenticated">
-        <a routerLink="/dashboard" routerLinkActive="active" class="w3-bar-item w3-button" (click)="sidebarToggle()">Nástenka</a>
-    </ng-container>
-</nav>
-
-<div class="main-header w3-container w3-teal w3-card-4">
-    <h1>
-        <a class="w3-left w3-button w3-hide-large"
-           (click)="sidebarToggle()"
-           title="Menu">
-            <fa-icon [icon]="faBars"></fa-icon>
-        </a>
-        <span>Pestovateľský denník</span>
-    </h1>
-</div>
-
-<div class="w3-main main-content w3-padding-16" #mainContent>
+<div class="pd-container">
+    <mat-toolbar color="primary" class="pd-toolbar mat-elevation-z5">
+        <h1 class="pd-app-name">
+            <a routerLink="/dashboard" *ngIf="authenticated">Pestovateľský denník</a>
+            <span *ngIf="!authenticated">Pestovateľský denník</span>
+        </h1>
+        <span class="pd-spacer"></span>
+        <ng-container *ngIf="authenticated">
+            <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item routerLink="/profile">Profil</button>
+            </mat-menu>
+            <button mat-icon-button (click)="logout()" matTooltip="Odhlásiť sa"><mat-icon>logout</mat-icon></button>
+        </ng-container>
+    </mat-toolbar>
     <router-outlet></router-outlet>
 </div>

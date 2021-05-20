@@ -5,8 +5,7 @@ import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
 
@@ -28,6 +27,10 @@ export class LoginComponent implements OnInit {
     public login(): void {
         this.authService.login(this.loginForm.value).subscribe(() => {
                 this.router.navigate(['/dashboard']);
+        }, error => {
+            if (error.error?.message === 'DISABLED_USER') {
+                this.router.navigate(['/activate', { username: this.loginForm.get('username')?.value }]);
+            }
         });
     }
 }
