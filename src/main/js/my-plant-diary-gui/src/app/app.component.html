@@ -1,8 +1,8 @@
 <div class="pd-container">
     <mat-toolbar color="primary" class="pd-toolbar mat-elevation-z5">
+        <button mat-icon-button matTooltip="Hlavná obrazovka" routerLink="/dashboard" *ngIf="authenticated"><mat-icon>home</mat-icon></button>
         <h1 class="pd-app-name">
-            <a routerLink="/dashboard" *ngIf="authenticated">Pestovateľský denník</a>
-            <span *ngIf="!authenticated">Pestovateľský denník</span>
+            Pestovateľský denník
         </h1>
         <span class="pd-spacer"></span>
         <ng-container *ngIf="authenticated">

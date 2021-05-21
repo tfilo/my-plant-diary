@@ -14,6 +14,11 @@ export interface JwtToken {
     sub: string
 }
 
+export enum LOCAL_STORAGE {
+    TOKEN = 'token',
+    TOKEN_EXPIRATION = 'tokenExpiration'
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -29,12 +34,9 @@ export class AuthService {
     }
 
     isAuthenticated(): boolean {
-        const token = localStorage.getItem('token');
-        if (!!token) {
-            const decoded = new JwtHelperService().decodeToken<JwtToken>(token);
-            if (!!decoded && (decoded.exp * 1000) > Date.now()) { // Token is valid
-                return true;
-            }
+        const tokenExpiration = Number(localStorage.getItem(LOCAL_STORAGE.TOKEN_EXPIRATION));
+        if (tokenExpiration > Date.now()) {
+            return true;
         }
         return false;
     }
@@ -72,13 +74,15 @@ export class AuthService {
     }
 
     private storeToken(token: string): void {
-        localStorage.setItem('token', token);
         const decoded = new JwtHelperService().decodeToken<JwtToken>(token);
+        localStorage.setItem(LOCAL_STORAGE.TOKEN, token);
+        localStorage.setItem(LOCAL_STORAGE.TOKEN_EXPIRATION, (decoded.exp * 1000).toString());
         this.renewTimer(Math.max(((decoded.exp - 60) * 1000) - Date.now(), 1));
     }
 
     private removeToken(): void {
-        localStorage.removeItem('token');
+        localStorage.removeItem(LOCAL_STORAGE.TOKEN);
+        localStorage.removeItem(LOCAL_STORAGE.TOKEN_EXPIRATION);
         if (this.renewSubscription) {
             this.renewSubscription.unsubscribe();
             this.renewSubscription = null;
@@ -86,14 +90,11 @@ export class AuthService {
     }
 
     private loadAndRenewToken(): void {
-        const token = localStorage.getItem('token');
-        if (!!token) {
-            const decoded = new JwtHelperService().decodeToken<JwtToken>(token);
-            if (!!decoded && (decoded.exp * 1000) > Date.now()) { // Token is valid
-                this.renew();
-            } else { // Token is expired
-                this.removeToken();
-            }
+        const tokenExpiration = Number(localStorage.getItem(LOCAL_STORAGE.TOKEN_EXPIRATION));
+        if (tokenExpiration > Date.now()) { // Token is valid
+            this.renew();
+        } else { // Token is expired
+            this.removeToken();
         }
     }
 }

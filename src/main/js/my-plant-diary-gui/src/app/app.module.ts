@@ -33,11 +33,18 @@ import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {LocationComponent} from './location/location.component';
+import {LocationComponent} from './location-list/location/location.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatExpansionModule} from '@angular/material/expansion';
+
 import { UserComponent } from './user/user.component';
+import { LocationListComponent } from './location-list/location-list.component';
+import { PlantListComponent } from './plant-list/plant-list.component';
+import { ScheduleListComponent } from './schedule-list/schedule-list.component';
+import { PlantComponent } from './plant/plant.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -66,7 +73,11 @@ export class TokenInterceptor implements HttpInterceptor {
         ActivateComponent,
         DashboardComponent,
         LocationComponent,
-        UserComponent
+        UserComponent,
+        LocationListComponent,
+        PlantListComponent,
+        ScheduleListComponent,
+        PlantComponent
     ],
     imports: [
         BrowserModule,
@@ -87,7 +98,9 @@ export class TokenInterceptor implements HttpInterceptor {
         FlexLayoutModule,
         MatTabsModule,
         MatMenuModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatExpansionModule,
+        MatDialogModule
     ],
     providers: [
         {provide: BASE_PATH, useValue: environment.baseUrl},

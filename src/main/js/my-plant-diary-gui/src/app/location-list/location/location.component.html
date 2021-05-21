@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>
+    {{ data.id ? 'Upraviť miesto' : 'Pridať miesto' }}
+</h1>
+<form [formGroup]="locationForm" (submit)="onSave()">
+    <div mat-dialog-content>
+        <input type="hidden" formControlName="id">
+        <mat-form-field class="pd-full-width">
+            <mat-label>Názov</mat-label>
+            <input matInput formControlName="name">
+            <mat-error *ngIf="locationForm.controls['name'].hasError('required')">
+                Povinná položka
+            </mat-error>
+            <mat-error *ngIf="locationForm.controls['name'].hasError('maxlength')">
+                Maximálne 25 znakov
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>Zavrieť</button>
+        <button mat-button type="submit">{{ data.id ? 'Uložiť' : 'Pridať' }}</button>
+    </div>
+</form>

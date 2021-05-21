@@ -1,0 +1,20 @@
+<section>
+    <mat-accordion class="pd-headers-align" multi>
+        <mat-expansion-panel *ngFor="let location of locations">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ location.name }}
+                    <span class="pd-spacer"></span>
+                    <button mat-icon-button matTooltip="Upraviť miesto" (click)="onUpdateLocation($event, location)" class="pd-edit-btn"><mat-icon>edit</mat-icon></button>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            TODO zoznam rastlin lokacie
+
+        </mat-expansion-panel>
+    </mat-accordion>
+    <button mat-fab color="primary" aria-label="Pridať miesto" class="pd-bottom-action-button" matTooltip="Pridať miesto" (click)="onAddLocation()">
+        <mat-icon>add</mat-icon>
+    </button>
+</section>
+

@@ -4,7 +4,7 @@
             <mat-icon>public</mat-icon>
         </ng-template>
         <ng-template matTabContent>
-            Miesta
+            <app-location-list></app-location-list>
         </ng-template>
     </mat-tab>
     <mat-tab>
@@ -12,7 +12,7 @@
             <mat-icon>local_florist</mat-icon>
         </ng-template>
         <ng-template matTabContent>
-            Rastliny
+            <app-plant-list></app-plant-list>
         </ng-template>
     </mat-tab>
     <mat-tab>
@@ -20,10 +20,7 @@
             <mat-icon>schedule</mat-icon>
         </ng-template>
         <ng-template matTabContent>
-            Plán
+            <app-schedule-list></app-schedule-list>
         </ng-template>
     </mat-tab>
 </mat-tab-group>
-<button mat-fab color="primary" aria-label="Pridať miesto" class="pd-bottom-button">
-    <mat-icon>add</mat-icon>
-</button>
