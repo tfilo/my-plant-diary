@@ -1,4 +1,44 @@
-<p>plant-list works!</p>
-<button mat-fab color="primary" aria-label="Pridať miesto" class="pd-bottom-action-button" matTooltip="Pridať rastlinu">
-    <mat-icon>add</mat-icon>
-</button>
+<aside class="pd-action-btns">
+    <button
+        mat-mini-fab
+        color="primary"
+        matTooltip="Pridať rastlinu"
+        (click)="onAddPlant()">
+        <mat-icon>grass</mat-icon>
+    </button>
+
+    <button
+        mat-mini-fab
+        color="accent"
+        matTooltip="Poliatie"
+        (click)="onWattering()">
+        <mat-icon>water_drop</mat-icon>
+    </button>
+
+    <button
+        mat-mini-fab
+        color="accent"
+        matTooltip="Hnojivo"
+        (click)="onFertilizing()">
+        <mat-icon>local_florist</mat-icon>
+    </button>
+
+    <button
+        mat-mini-fab
+        color="accent"
+        matTooltip="Presadenie"
+        (click)="repot()">
+        <mat-icon>grain</mat-icon>
+    </button>
+
+
+</aside>
+<mat-grid-list cols="4" rowHeight="1:1" gutterSize="8px" style="margin: 8px;">
+    <mat-grid-tile *ngFor="let plant of plants">
+        <app-plant-thumbnail
+            [plant]="plant"
+            (onEdit)="onUpdatePlant($event)">
+        </app-plant-thumbnail>
+    </mat-grid-tile>
+</mat-grid-list>
+

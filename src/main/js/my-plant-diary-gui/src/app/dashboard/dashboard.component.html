@@ -1,12 +1,5 @@
-<mat-tab-group mat-stretch-tabs>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon>public</mat-icon>
-        </ng-template>
-        <ng-template matTabContent>
-            <app-location-list></app-location-list>
-        </ng-template>
-    </mat-tab>
+<mat-tab-group mat-stretch-tabs animationDuration="0ms">
+
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon>local_florist</mat-icon>
@@ -15,6 +8,16 @@
             <app-plant-list></app-plant-list>
         </ng-template>
     </mat-tab>
+
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon>public</mat-icon>
+        </ng-template>
+        <ng-template matTabContent>
+            <app-location-list></app-location-list>
+        </ng-template>
+    </mat-tab>
+
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon>schedule</mat-icon>
@@ -23,4 +26,5 @@
             <app-schedule-list></app-schedule-list>
         </ng-template>
     </mat-tab>
+
 </mat-tab-group>

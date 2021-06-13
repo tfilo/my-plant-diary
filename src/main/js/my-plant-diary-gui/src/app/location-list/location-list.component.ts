@@ -13,12 +13,18 @@ export class LocationListComponent implements OnInit {
 
     locations: Array<Location> = [];
 
+    displayedColumns: string[] = ['name', 'id'];
+
     constructor(
         private locationService: LocationService,
         private dialog: MatDialog) {
     }
 
     ngOnInit(): void {
+        this.loadLocations();
+    }
+
+    private loadLocations(): void {
         this.locationService.getAllLocations().subscribe(locations => {
             this.locations = locations;
         });
@@ -31,10 +37,7 @@ export class LocationListComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(data => {
-            console.log(data);
-            if (data) {
-                this.locations.push(data);
-            }
+            this.loadLocations();
         });
     }
 
@@ -50,9 +53,16 @@ export class LocationListComponent implements OnInit {
             if (data) {
                 const location = this.locations.find(l => l.id === data.id);
                 if (location) {
-                    location.name = data.name;
+                    Object.assign(location, data);
                 }
             }
+        });
+    }
+
+    onDeleteLocation(event: Event,location: Location): void {
+        event.stopPropagation();
+        this.locationService.deleteLocation(location.id).subscribe(() => {
+            this.loadLocations();
         });
     }
 }

@@ -16,12 +16,14 @@ public interface PlantMapper {
     PlantSO toSO(Plant plant);
 
     @Mappings({
-            @Mapping(target = "type", ignore = true)
+            @Mapping(target = "type", ignore = true),
+            @Mapping(target = "location", ignore = true)
     })
     void toBO(PlantSO plantSO, @MappingTarget Plant plant);
 
     @Mappings({
-            @Mapping(target = "type", ignore = true)
+            @Mapping(target = "type", ignore = true),
+            @Mapping(target = "location", ignore = true)
     })
     Plant toBO(CreatePlantSO plant);
 

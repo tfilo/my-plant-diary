@@ -38,13 +38,18 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatTableModule} from '@angular/material/table';
+import {MatSelectModule} from '@angular/material/select';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 import { UserComponent } from './user/user.component';
 import { LocationListComponent } from './location-list/location-list.component';
 import { PlantListComponent } from './plant-list/plant-list.component';
 import { ScheduleListComponent } from './schedule-list/schedule-list.component';
-import { PlantComponent } from './plant/plant.component';
-import {MatDialogModule} from '@angular/material/dialog';
+import { PlantComponent } from './plant-list/plant/plant.component';
+import { PlantThumbnailComponent } from './plant-list/plant-thumbnail/plant-thumbnail.component';
+
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -77,7 +82,8 @@ export class TokenInterceptor implements HttpInterceptor {
         LocationListComponent,
         PlantListComponent,
         ScheduleListComponent,
-        PlantComponent
+        PlantComponent,
+        PlantThumbnailComponent
     ],
     imports: [
         BrowserModule,
@@ -100,7 +106,10 @@ export class TokenInterceptor implements HttpInterceptor {
         MatMenuModule,
         MatTooltipModule,
         MatExpansionModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTableModule,
+        MatSelectModule,
+        MatGridListModule
     ],
     providers: [
         {provide: BASE_PATH, useValue: environment.baseUrl},

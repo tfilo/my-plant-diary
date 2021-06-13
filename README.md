@@ -29,8 +29,8 @@ Tests
 - Random Beans
 - Testcontainers
 
-Frontend
-- Angular (TODO - work in progress)
+FrontendAngular (TODO - work in progress)
+- 
 
 #### Requirements for build (other versions may work too)
 
@@ -43,11 +43,10 @@ Frontend
 
 - `mvn clean install`
 
-#### Run - in development environment
+#### Run - in docker compose
 
-- `./run-postgre-server.sh`
-- `./run-plant-diary.sh`
-- `./run-mail-server.sh`
+- `cd my-plant-diary`
+- `docker-compose up -d`
 
 ## Endpoins
 

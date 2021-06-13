@@ -11,12 +11,12 @@
                 Povinná položka
             </mat-error>
             <mat-error *ngIf="locationForm.controls['name'].hasError('maxlength')">
-                Maximálne 25 znakov
+                Maximálne 80 znakov
             </mat-error>
         </mat-form-field>
     </div>
     <div mat-dialog-actions>
-        <button mat-button mat-dialog-close>Zavrieť</button>
-        <button mat-button type="submit">{{ data.id ? 'Uložiť' : 'Pridať' }}</button>
+        <button mat-button color="warn" mat-dialog-close>Zavrieť</button>
+        <button mat-button color="primary" type="submit">{{ data.id ? 'Uložiť' : 'Pridať' }}</button>
     </div>
 </form>

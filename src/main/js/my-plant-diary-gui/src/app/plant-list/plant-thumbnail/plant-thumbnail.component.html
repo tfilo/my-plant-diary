@@ -1,0 +1,28 @@
+<div class="pd-plant-thumbnail">
+    <div class="pd-plant-thumbnail-content">
+        <h2>{{ plant?.name }}</h2>
+        <mat-list>
+            <mat-list-item><mat-icon>water_drop</mat-icon> <span>4 day ago</span></mat-list-item>
+            <mat-list-item><mat-icon>local_florist</mat-icon> <span>2 day ago</span></mat-list-item>
+            <mat-list-item><mat-icon>room</mat-icon> <span>{{ plant?.location?.name }}</span></mat-list-item>
+            <mat-list-item><mat-icon>grass</mat-icon> <span>{{ plant?.type?.code }}</span></mat-list-item>
+        </mat-list>
+    </div>
+    <div class="pd-plant-thumbnail-btns">
+        <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Zobraziť detail rastliny"
+            (click)="onPreviewPlant()">
+            <mat-icon>preview</mat-icon>
+        </button>
+        <button
+            mat-icon-button
+            color="accent"
+            matTooltip="Upraviť rastlinu"
+            (click)="onEditPlant()">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+</div>
+

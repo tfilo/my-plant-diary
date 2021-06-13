@@ -1,0 +1,33 @@
+.pd-plant-thumbnail {
+    background-color: lightgreen;
+    width: 100%;
+    height: 100%;
+}
+
+.pd-plant-thumbnail-content {
+    margin: 8px;
+    text-overflow: ellipsis;
+    text-align: justify;
+}
+
+.pd-plant-thumbnail-btns {
+    position: absolute;
+    right:    0;
+    bottom:   0;
+}
+
+.mat-list-base {
+    padding-top: 0px!important;
+}
+
+.mat-list-item {
+    height: 32px!important;
+}
+
+.mat-icon {
+    padding-right: 8px;
+}
+
+.mat-list-item-content {
+    padding: 0 8px!important;
+}

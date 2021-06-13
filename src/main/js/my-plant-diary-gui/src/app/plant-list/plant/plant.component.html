@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>
+    {{ data.id ? 'Upraviť rastlinu' : 'Pridať rastlinu' }}
+</h1>
+<form [formGroup]="plantForm" (submit)="onSave()">
+    <div mat-dialog-content>
+        <input type="hidden" formControlName="id">
+        <input type="hidden" formControlName="deleted">
+        <mat-form-field class="pd-full-width">
+            <mat-label>Názov</mat-label>
+            <input matInput formControlName="name">
+            <mat-error *ngIf="plantForm.controls['name'].hasError('required')">
+                Povinná položka
+            </mat-error>
+            <mat-error *ngIf="plantForm.controls['name'].hasError('maxlength')">
+                Maximálne 100 znakov
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="pd-full-width">
+            <mat-label>Popis</mat-label>
+            <textarea matInput formControlName="description" [matAutosizeMinRows]="4" [matAutosizeMaxRows]="15" [matTextareaAutosize]="true"></textarea>
+            <mat-error *ngIf="plantForm.controls['description'].hasError('maxlength')">
+                Maximálne 1000 znakov
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="pd-full-width">
+            <mat-label>Typ rastliny</mat-label>
+            <mat-select formControlName="type" [compareWith]="compareById">
+                <mat-option *ngFor="let plantType of plantTypes" [value]="plantType">{{ plantType.code }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="plantForm.controls['type'].hasError('required')">
+                Povinná položka
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="pd-full-width">
+            <mat-label>Umiestnenie</mat-label>
+            <mat-select formControlName="location" [compareWith]="compareById">
+                <mat-option *ngFor="let location of locations" [value]="location">{{ location.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="plantForm.controls['location'].hasError('required')">
+                Povinná položka
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button color="warn" mat-dialog-close>Zavrieť</button>
+        <button mat-button color="primary" type="submit">{{ data.id ? 'Uložiť' : 'Pridať' }}</button>
+    </div>
+</form>

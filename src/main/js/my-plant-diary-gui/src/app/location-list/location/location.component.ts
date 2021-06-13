@@ -29,7 +29,6 @@ export class LocationComponent implements OnInit {
     onSave(): void {
         (this.data.id ? this.locationService.updateLocation({...this.locationForm.value}) : this.locationService.createLocation({...this.locationForm.value}))
             .subscribe(data=> {
-                console.log(data);
                 this.dialogRef.close(data);
             });
     }
